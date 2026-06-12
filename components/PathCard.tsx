@@ -1,29 +1,29 @@
-import { View, Text, Pressable, StyleSheet } from "react-native";
+import { Pressable, Text, StyleSheet } from "react-native";
+
+interface PathCardProps {
+  emoji: string;
+  title: string;
+  onPress: () => void;
+}
 
 export default function PathCard({
   emoji,
   title,
   onPress,
-}: any) {
+}: PathCardProps) {
   return (
-    <Pressable
-      style={styles.card}
-      onPress={onPress}
-    >
+    <Pressable style={styles.card} onPress={onPress}>
       <Text style={styles.emoji}>{emoji}</Text>
-
-      <Text style={styles.title}>
-        {title}
-      </Text>
+      <Text style={styles.title}>{title}</Text>
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "white",
+    backgroundColor: "#fff",
     padding: 20,
-    borderRadius: 16,
+    borderRadius: 15,
     marginBottom: 15,
     flexDirection: "row",
     alignItems: "center",
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
   },
 
   emoji: {
-    fontSize: 30,
+    fontSize: 28,
     marginRight: 15,
   },
 
