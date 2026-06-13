@@ -81,8 +81,8 @@ export default function ProjectScreen() {
           <View style={styles.folderSection}>
             <View style={styles.folderHeader}>
               <View style={styles.codeDot} />
-              <View style={[styles.codeDot, { backgroundColor: "#F7D774" }]} />
-              <View style={[styles.codeDot, { backgroundColor: "#10B981" }]} />
+              <View style={[styles.codeDot, { backgroundColor: Colors.primaryLight }]} />
+              <View style={[styles.codeDot, { backgroundColor: Colors.success }]} />
               <Text style={styles.folderHeaderLabel}>Terminal</Text>
             </View>
             <View style={styles.folderBody}>
@@ -152,10 +152,12 @@ const styles = StyleSheet.create({
     fontWeight: FontWeight.semiBold,
   },
   heroCard: {
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.surface,
     borderRadius: Radius.xxl,
     padding: Spacing.xl,
     marginBottom: Spacing.xl,
+    borderWidth: 1,
+    borderColor: Colors.border,
     ...Elevation.md,
   },
   heroTop: {
@@ -168,35 +170,37 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: Radius.md,
-    backgroundColor: Colors.butter,
+    backgroundColor: Colors.surfaceSecondary,
     alignItems: "center",
     justifyContent: "center",
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   heroIcon: {
     fontSize: 24,
   },
   heroBadge: {
-    backgroundColor: "rgba(255,255,255,0.15)",
+    backgroundColor: Colors.surfaceSecondary,
     borderRadius: Radius.pill,
     paddingVertical: 4,
     paddingHorizontal: Spacing.md,
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.20)",
+    borderColor: Colors.border,
   },
   heroBadgeText: {
     fontSize: FontSize.caption,
     fontWeight: FontWeight.bold,
-    color: Colors.butter,
+    color: Colors.primary,
   },
   heroTitle: {
     fontSize: FontSize.title1,
     fontWeight: FontWeight.black,
-    color: Colors.textInverse,
+    color: Colors.textPrimary,
     marginBottom: Spacing.sm,
   },
   heroDesc: {
     fontSize: FontSize.body,
-    color: "rgba(255,255,255,0.70)",
+    color: Colors.textSecondary,
     lineHeight: 22,
   },
   section: {
@@ -256,32 +260,36 @@ const styles = StyleSheet.create({
   folderHeader: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#011F1A",
+    backgroundColor: Colors.surfaceSecondary,
     paddingVertical: Spacing.sm,
     paddingHorizontal: Spacing.md,
     gap: Spacing.xs,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   codeDot: {
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: "#EF4444",
+    backgroundColor: Colors.error,
   },
   folderHeaderLabel: {
     fontSize: FontSize.caption,
     fontWeight: FontWeight.semiBold,
-    color: "rgba(255,255,255,0.4)",
+    color: Colors.textSecondary,
     marginLeft: Spacing.sm,
     letterSpacing: 0.5,
   },
   folderBody: {
-    backgroundColor: Colors.primaryDark,
+    backgroundColor: Colors.surface,
     padding: Spacing.xl,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   folderText: {
     fontFamily: "monospace",
     fontSize: 14,
-    color: "#A3D9A5",
+    color: Colors.primary,
     lineHeight: 22,
   },
   guideText: {
@@ -297,6 +305,8 @@ const styles = StyleSheet.create({
     borderRadius: Radius.xl,
     paddingVertical: Spacing.lg,
     gap: Spacing.sm,
+    borderWidth: 1,
+    borderColor: Colors.primaryDark,
     ...Elevation.md,
   },
   ctaBtnText: {
@@ -307,6 +317,6 @@ const styles = StyleSheet.create({
   ctaBtnArrow: {
     fontSize: FontSize.body,
     fontWeight: FontWeight.bold,
-    color: Colors.butter,
+    color: Colors.textInverse,
   },
 });

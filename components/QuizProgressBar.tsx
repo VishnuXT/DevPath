@@ -37,23 +37,22 @@ const styles = StyleSheet.create({
   metaLabel: {
     fontSize: FontSize.caption,
     fontWeight: FontWeight.semiBold,
-    color: Colors.textInverse,
-    opacity: 0.84,
+    color: Colors.textPrimary,
   },
   metaValue: {
     fontSize: FontSize.caption,
     fontWeight: FontWeight.bold,
-    color: Colors.butter,
+    color: Colors.primary,
   },
   track: {
     height: 12,
     borderRadius: Radius.pill,
-    backgroundColor: "rgba(255,255,255,0.14)",
+    backgroundColor: Colors.border,
     overflow: "hidden",
   },
   fill: {
     height: "100%",
     borderRadius: Radius.pill,
-    backgroundColor: Colors.butter,
+    backgroundColor: Colors.primary,
   },
 });

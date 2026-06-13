@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
   },
   optionSelected: {
     borderColor: Colors.primary,
-    backgroundColor: Colors.primaryAlpha08,
+    backgroundColor: Colors.surfaceSecondary,
   },
   optionCorrect: {
     borderColor: Colors.success,
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
   },
   optionDotSelected: {
     borderColor: Colors.primary,
-    backgroundColor: Colors.butter,
+    backgroundColor: Colors.primary,
   },
   optionDotCorrect: {
     borderColor: Colors.success,

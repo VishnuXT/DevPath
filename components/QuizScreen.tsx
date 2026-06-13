@@ -291,10 +291,12 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.lg,
   },
   heroBadge: {
-    backgroundColor: Colors.butter,
+    backgroundColor: Colors.surfaceSecondary,
     paddingHorizontal: Spacing.sm,
     paddingVertical: 4,
     borderRadius: Radius.pill,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   heroBadgeText: {
     color: Colors.primary,
@@ -303,7 +305,7 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
   },
   exitText: {
-    color: Colors.butter,
+    color: Colors.primaryLight,
     fontWeight: FontWeight.bold,
     fontSize: FontSize.bodySmall,
   },
@@ -429,10 +431,12 @@ const styles = StyleSheet.create({
     fontWeight: FontWeight.bold,
   },
   secondaryBtn: {
-    backgroundColor: Colors.butter,
+    backgroundColor: Colors.surface,
     borderRadius: Radius.xl,
     paddingVertical: Spacing.md,
     alignItems: "center",
+    borderWidth: 1,
+    borderColor: Colors.primary,
   },
   secondaryBtnText: {
     color: Colors.primary,

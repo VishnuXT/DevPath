@@ -102,16 +102,16 @@ const nodeStyles: Record<NodeState, any> = {
   },
   active: {
     node: {
-      backgroundColor: Colors.butter,
+      backgroundColor: Colors.primary,
       borderColor: Colors.primary,
       borderWidth: 3,
     },
-    nodeText: { color: Colors.primary },
+    nodeText: { color: Colors.textInverse },
     card: {
       borderColor: Colors.primary,
       borderWidth: 1.5,
     },
-    chip: { backgroundColor: Colors.butter },
+    chip: { backgroundColor: Colors.primaryLight },
     chipText: { color: Colors.primary },
   },
   locked: {

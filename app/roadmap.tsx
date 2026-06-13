@@ -161,10 +161,12 @@ const styles = StyleSheet.create({
     color: Colors.textMuted,
   },
   progressPctBadge: {
-    backgroundColor: Colors.butter,
+    backgroundColor: Colors.surfaceSecondary,
     borderRadius: Radius.xl,
     paddingVertical: Spacing.sm,
     paddingHorizontal: Spacing.md,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   progressPctText: {
     fontSize: FontSize.title3,

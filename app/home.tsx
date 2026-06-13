@@ -82,14 +82,14 @@ export default function HomeScreen() {
               </View>
               {loading ? (
                 <View style={styles.loadingRow}>
-                  <ActivityIndicator color={Colors.butter} />
+                  <ActivityIndicator color={Colors.primary} />
                   <Text style={styles.loadingText}>Loading progress</Text>
                 </View>
               ) : (
                 <ProgressBar
                   progress={overallProgress}
-                  color={Colors.butter}
-                  backgroundColor="rgba(255,255,255,0.2)"
+                  color={Colors.primary}
+                  backgroundColor={Colors.border}
                   height={6}
                 />
               )}
@@ -150,6 +150,17 @@ export default function HomeScreen() {
           <Text style={styles.quizBtnLabel}>Open Quiz Demo</Text>
           <Text style={styles.quizBtnText}>Take the reusable quiz screen</Text>
         </Pressable>
+
+        <Pressable
+          style={({ pressed }) => [styles.aboutBtn, pressed && styles.aboutBtnPressed]}
+          onPress={() => router.push("/about")}
+        >
+          <Text style={styles.aboutBtnLabel}>About DevRoot</Text>
+          <Text style={styles.aboutBtnText}>
+            Learn more about DevRoot, our mission, and the team behind the platform.
+          </Text>
+          <Text style={styles.aboutBtnCta}>View About Page →</Text>
+        </Pressable>
       </ScrollView>
     </SafeAreaView>
   );
@@ -196,13 +207,15 @@ const styles = StyleSheet.create({
     color: Colors.primary,
   },
   heroBanner: {
-    backgroundColor: Colors.primary,
-    borderRadius: Radius.xl,
+    backgroundColor: Colors.surface,
+    borderRadius: Radius.xxl,
     padding: Spacing.xl,
     marginBottom: Spacing.xl,
     flexDirection: "row",
     alignItems: "center",
     overflow: "hidden",
+    borderWidth: 1,
+    borderColor: Colors.border,
     ...Elevation.md,
   },
   heroBannerLeft: {
@@ -211,19 +224,19 @@ const styles = StyleSheet.create({
   },
   heroBannerLabel: {
     ...LabelChip,
-    color: Colors.butter,
+    color: Colors.primary,
     marginBottom: Spacing.sm,
   },
   heroBannerTitle: {
     fontSize: FontSize.title2,
     fontWeight: FontWeight.black,
-    color: Colors.textInverse,
+    color: Colors.textPrimary,
     lineHeight: 30,
     marginBottom: Spacing.sm,
   },
   heroBannerSub: {
     fontSize: FontSize.bodySmall,
-    color: "rgba(255,255,255,0.65)",
+    color: Colors.textSecondary,
     lineHeight: 20,
     marginBottom: Spacing.lg,
   },
@@ -238,7 +251,7 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     fontSize: FontSize.caption,
-    color: "rgba(255,255,255,0.75)",
+    color: Colors.textSecondary,
     fontWeight: FontWeight.medium,
   },
   heroBannerProgressRow: {
@@ -247,21 +260,23 @@ const styles = StyleSheet.create({
   },
   heroBannerProgressLabel: {
     fontSize: FontSize.caption,
-    color: "rgba(255,255,255,0.6)",
+    color: Colors.textMuted,
     fontWeight: FontWeight.semiBold,
   },
   heroBannerProgressPct: {
     fontSize: FontSize.caption,
-    color: Colors.butter,
+    color: Colors.primary,
     fontWeight: FontWeight.bold,
   },
   heroBannerIcon: {
     width: 64,
     height: 64,
     borderRadius: 32,
-    backgroundColor: Colors.butter,
+    backgroundColor: Colors.surfaceSecondary,
     alignItems: "center",
     justifyContent: "center",
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   heroBannerEmoji: {
     fontSize: 32,
@@ -309,23 +324,51 @@ const styles = StyleSheet.create({
   quizBtn: {
     marginTop: Spacing.lg,
     backgroundColor: Colors.primary,
-    borderRadius: Radius.xl,
+    borderRadius: Radius.xxl,
     padding: Spacing.xl,
     borderWidth: 1,
     borderColor: Colors.primaryDark,
     ...Elevation.md,
   },
   quizBtnPressed: {
-    backgroundColor: Colors.primaryDark,
+    backgroundColor: Colors.primaryLight,
   },
   quizBtnLabel: {
     ...LabelChip,
-    color: Colors.butter,
+    color: Colors.textInverse,
     marginBottom: Spacing.xs,
   },
   quizBtnText: {
     color: Colors.textInverse,
     fontSize: FontSize.body,
     fontWeight: FontWeight.semiBold,
+  },
+  aboutBtn: {
+    marginTop: Spacing.lg,
+    backgroundColor: Colors.surface,
+    borderRadius: Radius.xxl,
+    padding: Spacing.xl,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    ...Elevation.md,
+  },
+  aboutBtnPressed: {
+    backgroundColor: Colors.surfaceSecondary,
+  },
+  aboutBtnLabel: {
+    ...LabelChip,
+    color: Colors.primary,
+    marginBottom: Spacing.xs,
+  },
+  aboutBtnText: {
+    fontSize: FontSize.body,
+    lineHeight: 22,
+    color: Colors.textSecondary,
+    marginBottom: Spacing.sm,
+  },
+  aboutBtnCta: {
+    fontSize: FontSize.bodySmall,
+    fontWeight: FontWeight.bold,
+    color: Colors.primary,
   },
 });

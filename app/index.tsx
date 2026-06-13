@@ -6,7 +6,7 @@ import { Colors, FontSize, FontWeight, Spacing, Radius, Elevation } from "../con
 export default function SplashScreen() {
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor={Colors.primary} />
+      <StatusBar barStyle="dark-content" backgroundColor={Colors.background} />
 
       <View style={styles.circleTopRight} />
       <View style={styles.circleBottomLeft} />
@@ -51,7 +51,7 @@ export default function SplashScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.background,
     paddingHorizontal: Spacing.xl,
     justifyContent: "space-between",
     paddingBottom: Spacing.xxxl,
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     height: 200,
     borderRadius: 100,
     backgroundColor: Colors.primaryLight,
-    opacity: 0.3,
+    opacity: 0.18,
   },
   circleBottomLeft: {
     position: "absolute",
@@ -73,8 +73,8 @@ const styles = StyleSheet.create({
     width: 260,
     height: 260,
     borderRadius: 130,
-    backgroundColor: Colors.primaryLight,
-    opacity: 0.2,
+    backgroundColor: Colors.butter,
+    opacity: 0.10,
   },
   logoSection: {
     alignItems: "center",
@@ -84,10 +84,12 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: Colors.butter,
+    backgroundColor: Colors.surface,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: Spacing.xl,
+    borderWidth: 1,
+    borderColor: Colors.border,
     ...Elevation.lg,
   },
   logoEmoji: {
@@ -96,13 +98,13 @@ const styles = StyleSheet.create({
   appName: {
     fontSize: 48,
     fontWeight: FontWeight.black,
-    color: Colors.textInverse,
+    color: Colors.textPrimary,
     letterSpacing: -1,
     marginBottom: Spacing.sm,
   },
   tagline: {
     fontSize: FontSize.body,
-    color: Colors.butter,
+    color: Colors.primary,
     fontWeight: FontWeight.medium,
     letterSpacing: 1,
   },
@@ -112,20 +114,20 @@ const styles = StyleSheet.create({
   featureRow: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "rgba(255,255,255,0.08)",
+    backgroundColor: Colors.surface,
     borderRadius: Radius.lg,
     paddingVertical: Spacing.md,
     paddingHorizontal: Spacing.lg,
     gap: Spacing.md,
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.10)",
+    borderColor: Colors.border,
   },
   featureIcon: {
     fontSize: 22,
   },
   featureText: {
     fontSize: FontSize.body,
-    color: "rgba(255,255,255,0.9)",
+    color: Colors.textSecondary,
     fontWeight: FontWeight.medium,
   },
   ctaSection: {
@@ -136,7 +138,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: Colors.butter,
+    backgroundColor: Colors.primary,
     borderRadius: Radius.lg,
     paddingVertical: Spacing.lg,
     paddingHorizontal: Spacing.xxxl,
@@ -145,21 +147,21 @@ const styles = StyleSheet.create({
     ...Elevation.md,
   },
   ctaBtnPressed: {
-    backgroundColor: Colors.butterMid,
+    backgroundColor: Colors.primaryDark,
   },
   ctaBtnText: {
     fontSize: FontSize.title3,
     fontWeight: FontWeight.bold,
-    color: Colors.primary,
+    color: Colors.textInverse,
   },
   ctaBtnArrow: {
     fontSize: FontSize.title3,
     fontWeight: FontWeight.bold,
-    color: Colors.primaryDark,
+    color: Colors.textInverse,
   },
   ctaHint: {
     fontSize: FontSize.caption,
-    color: "rgba(255,255,255,0.45)",
+    color: Colors.textMuted,
     fontWeight: FontWeight.medium,
   },
 });

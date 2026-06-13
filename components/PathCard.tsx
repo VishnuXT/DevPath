@@ -85,11 +85,11 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: Radius.lg,
-    backgroundColor: Colors.butter,
+    backgroundColor: Colors.surfaceSecondary,
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 1,
-    borderColor: Colors.butterDark,
+    borderColor: Colors.border,
   },
   emoji: {
     fontSize: 28,

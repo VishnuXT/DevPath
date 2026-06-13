@@ -13,7 +13,7 @@ export default function ProgressBar({
   progress,
   height = 8,
   color = Colors.primary,
-  backgroundColor = Colors.surfaceTertiary,
+  backgroundColor = Colors.border,
   showLabel = false,
 }: ProgressBarProps) {
   const clamped = Math.max(0, Math.min(100, progress));
@@ -45,7 +45,6 @@ const styles = StyleSheet.create({
     width: "100%",
     borderRadius: Radius.pill,
     overflow: "hidden",
-    backgroundColor: Colors.surfaceTertiary,
   },
   fill: {
     borderRadius: Radius.pill,

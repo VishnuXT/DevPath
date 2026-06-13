@@ -4,44 +4,46 @@
 
 // COLOR PALETTE
 export const Colors = {
-  // Primary — Deep Forest Green
-  primary: "#013E37",
-  primaryDark: "#012B26",
-  primaryLight: "#02695E",
-  primaryAlpha08: "rgba(1, 62, 55, 0.08)",
-  primaryAlpha15: "rgba(1, 62, 55, 0.15)",
+  // Primary Forest Green
+  primary: "#1B5E20",
+  primaryDark: "#14501A",
+  primaryLight: "#A5D6A7",
+  primaryAlpha08: "rgba(27, 94, 32, 0.08)",
+  primaryAlpha15: "rgba(27, 94, 32, 0.15)",
 
-  // Secondary — Soft Butter Yellow
-  butter: "#FFEFB3",
-  butterMid: "#F7D774",
-  butterDark: "#E8C24A",
-  butterAlpha40: "rgba(255, 239, 179, 0.40)",
+  // Achievement Gold
+  butter: "#D4AF37",
+  butterMid: "#E0C15A",
+  butterDark: "#B9921D",
+  butterAlpha40: "rgba(212, 175, 55, 0.40)",
+  achievementGold: "#D4AF37",
+  achievementLight: "#F5E6A3",
 
   // Backgrounds
-  background: "#FAFAF8",
+  background: "#F8FAF8",
   surface: "#FFFFFF",
-  surfaceSecondary: "#F4F5F2",
-  surfaceTertiary: "#ECEDE8",
+  surfaceSecondary: "#F3F7F3",
+  surfaceTertiary: "#F3F4F6",
 
   // Text
-  textPrimary: "#013E37",
+  textPrimary: "#1F2937",
   textSecondary: "#6B7280",
   textMuted: "#9CA3AF",
   textInverse: "#FFFFFF",
-  textButter: "#FFEFB3",
+  textButter: "#1F2937",
 
   // Borders
   border: "#E5E7EB",
-  borderLight: "#EEF1ED",
+  borderLight: "#F3F4F6",
 
   // Status
-  success: "#059669",
-  successBg: "#ECFDF5",
-  successText: "#064E3B",
-  error: "#DC2626",
-  errorBg: "#FEF2F2",
-  errorText: "#7F1D1D",
-  warning: "#D97706",
+  success: "#22C55E",
+  successBg: "#DCFCE7",
+  successText: "#166534",
+  error: "#EF4444",
+  errorBg: "#FEE2E2",
+  errorText: "#B91C1C",
+  warning: "#F59E0B",
   warningBg: "#FFFBEB",
 } as const;
 
@@ -91,21 +93,21 @@ export const Radius = {
 // ELEVATION (green-tinted shadows — not harsh black)
 export const Elevation = {
   sm: {
-    shadowColor: "#0F172A",
+    shadowColor: "#1B5E20",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 4,
     elevation: 1,
   },
   md: {
-    shadowColor: "#0F172A",
+    shadowColor: "#1B5E20",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.08,
     shadowRadius: 10,
     elevation: 3,
   },
   lg: {
-    shadowColor: "#0F172A",
+    shadowColor: "#1B5E20",
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.10,
     shadowRadius: 18,

@@ -95,8 +95,8 @@ export default function LessonScreen() {
           <View style={styles.codeSection}>
             <View style={styles.codeHeader}>
               <View style={styles.codeDot} />
-              <View style={[styles.codeDot, { backgroundColor: "#F7D774" }]} />
-              <View style={[styles.codeDot, { backgroundColor: "#10B981" }]} />
+              <View style={[styles.codeDot, { backgroundColor: Colors.primaryLight }]} />
+              <View style={[styles.codeDot, { backgroundColor: Colors.success }]} />
               <Text style={styles.codeHeaderLabel}>Example</Text>
             </View>
             <View style={styles.codeBlock}>
@@ -263,32 +263,36 @@ const styles = StyleSheet.create({
   codeHeader: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#011F1A",
+    backgroundColor: Colors.surfaceSecondary,
     paddingVertical: Spacing.sm,
     paddingHorizontal: Spacing.md,
     gap: Spacing.xs,
+    borderBottomWidth: 1,
+    borderColor: Colors.border,
   },
   codeDot: {
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: "#EF4444",
+    backgroundColor: Colors.error,
   },
   codeHeaderLabel: {
     fontSize: FontSize.caption,
     fontWeight: FontWeight.semiBold,
-    color: "rgba(255,255,255,0.4)",
+    color: Colors.textSecondary,
     marginLeft: Spacing.sm,
     letterSpacing: 0.5,
   },
   codeBlock: {
-    backgroundColor: Colors.primaryDark,
+    backgroundColor: Colors.surface,
     padding: Spacing.xl,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   codeText: {
     fontFamily: "monospace",
     fontSize: 14,
-    color: Colors.butter,
+    color: Colors.primary,
     lineHeight: 22,
   },
   quizSection: {
@@ -448,7 +452,7 @@ const styles = StyleSheet.create({
   },
   continueBtnArrow: {
     fontSize: FontSize.body,
-    color: Colors.butter,
+    color: Colors.textInverse,
     fontWeight: FontWeight.bold,
   },
   tryAgainBtn: {
