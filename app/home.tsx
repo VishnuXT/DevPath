@@ -5,6 +5,7 @@ import {
   ScrollView,
   SafeAreaView,
   StatusBar,
+  ActivityIndicator,
 } from "react-native";
 import { router } from "expo-router";
 import PathCard from "../components/PathCard";
@@ -43,7 +44,7 @@ const PATHS = [
 ];
 
 export default function HomeScreen() {
-  const { getOverallProgress, getPathProgress } = useProgress();
+  const { getOverallProgress, getPathProgress, loading } = useProgress();
   const overallProgress = getOverallProgress();
 
   return (
@@ -80,14 +81,23 @@ export default function HomeScreen() {
             <View style={styles.heroBannerProgress}>
               <View style={styles.heroBannerProgressRow}>
                 <Text style={styles.heroBannerProgressLabel}>Overall Progress</Text>
-                <Text style={styles.heroBannerProgressPct}>{overallProgress}%</Text>
+                <Text style={styles.heroBannerProgressPct}>
+                  {loading ? "..." : `${overallProgress}%`}
+                </Text>
               </View>
-              <ProgressBar
-                progress={overallProgress}
-                color={Colors.butter}
-                backgroundColor="rgba(255,255,255,0.2)"
-                height={6}
-              />
+              {loading ? (
+                <View style={styles.loadingRow}>
+                  <ActivityIndicator color={Colors.butter} />
+                  <Text style={styles.loadingText}>Loading progress</Text>
+                </View>
+              ) : (
+                <ProgressBar
+                  progress={overallProgress}
+                  color={Colors.butter}
+                  backgroundColor="rgba(255,255,255,0.2)"
+                  height={6}
+                />
+              )}
             </View>
           </View>
 
@@ -214,6 +224,17 @@ const styles = StyleSheet.create({
   },
   heroBannerProgress: {
     gap: Spacing.xs,
+  },
+  loadingRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.sm,
+    minHeight: 20,
+  },
+  loadingText: {
+    fontSize: FontSize.caption,
+    color: "rgba(255,255,255,0.75)",
+    fontWeight: FontWeight.medium,
   },
   heroBannerProgressRow: {
     flexDirection: "row",

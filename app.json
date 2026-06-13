@@ -20,7 +20,7 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "DevPATHcom.valour01.devpath"
+      "package": "com.valour01.devpath"
     },
     "web": {
       "output": "static",

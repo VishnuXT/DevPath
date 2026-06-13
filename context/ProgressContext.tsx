@@ -28,6 +28,14 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
   });
   const [loading, setLoading] = useState(true);
 
+  const persistProgress = (updater: (current: UserProgress) => UserProgress) => {
+    setProgressState((current) => {
+      const updated = updater(current);
+      void saveProgress(updated);
+      return updated;
+    });
+  };
+
   useEffect(() => {
     async function init() {
       const stored = await loadProgress();
@@ -39,22 +47,18 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
 
   const completeLesson = async (lessonId: string) => {
     if (progress.completedLessons.includes(lessonId)) return;
-    const updated = {
-      ...progress,
-      completedLessons: [...progress.completedLessons, lessonId],
-    };
-    setProgressState(updated);
-    await saveProgress(updated);
+    persistProgress((current) => ({
+      ...current,
+      completedLessons: [...current.completedLessons, lessonId],
+    }));
   };
 
   const completeProject = async (projectId: string) => {
     if (progress.completedProjects.includes(projectId)) return;
-    const updated = {
-      ...progress,
-      completedProjects: [...progress.completedProjects, projectId],
-    };
-    setProgressState(updated);
-    await saveProgress(updated);
+    persistProgress((current) => ({
+      ...current,
+      completedProjects: [...current.completedProjects, projectId],
+    }));
   };
 
   const isLessonCompleted = (lessonId: string) => {
@@ -111,8 +115,7 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
 
   const resetProgress = async () => {
     const empty = { completedLessons: [], completedProjects: [] };
-    setProgressState(empty);
-    await saveProgress(empty);
+    persistProgress(() => empty);
   };
 
   const resetPathProgress = async (pathId: string) => {
@@ -121,12 +124,10 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     const pathLessonIds = pathData.roadmap.flatMap((t) => t.lessons.map((l) => l.id));
     const pathProjectIds = pathData.roadmap.flatMap((t) => t.projects?.map((p) => p.id) || []);
 
-    const updated = {
-      completedLessons: progress.completedLessons.filter((id) => !pathLessonIds.includes(id)),
-      completedProjects: progress.completedProjects.filter((id) => !pathProjectIds.includes(id)),
-    };
-    setProgressState(updated);
-    await saveProgress(updated);
+    persistProgress((current) => ({
+      completedLessons: current.completedLessons.filter((id) => !pathLessonIds.includes(id)),
+      completedProjects: current.completedProjects.filter((id) => !pathProjectIds.includes(id)),
+    }));
   };
 
   return (
