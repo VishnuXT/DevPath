@@ -2,335 +2,546 @@ import { CareerPath } from "./types";
 
 export const backendPath: CareerPath = {
   id: "backend",
-  title: "Backend Development",
+  title: "Backend Fundamentals",
   emoji: "⚙️",
-  description: "Backend development handles the database, server, API routing, and business logic of software applications.",
+  description:
+    "A beginner path for learning Python, APIs, databases, and a simple backend app.",
   skills: [
-    "API Design & Integration",
-    "Database Management & SQL",
-    "Server-side Programming",
-    "Security & Authentication",
-    "Cloud Deployment & Scaling"
+    "Understand frontend vs backend",
+    "Write basic Python code",
+    "Build simple APIs",
+    "Store data in SQLite",
+    "Connect a frontend to data",
   ],
   technologies: [
     { name: "Python", emoji: "🐍" },
     { name: "FastAPI", emoji: "⚡" },
-    { name: "PostgreSQL", emoji: "🗄" }
+    { name: "SQLite", emoji: "🗄️" },
+    { name: "JavaScript", emoji: "⚙️" },
   ],
-  learningTimeline: "4 - 6 Months",
+  learningTimeline: "5 - 10 Hours",
   careerOpportunities: [
-    "Backend Engineer",
-    "API Developer",
-    "Software Engineer",
-    "Database Administrator"
+    "Beginner Backend Developer",
+    "API Builder",
+    "Python Learner",
+    "Full-Stack Starter",
   ],
   roadmap: [
     {
-      id: "python-basics",
-      title: "Python Basics",
-      description: "Learn Python fundamentals, syntax, variable assignment, and simple control flow.",
+      id: "what-is-backend",
+      title: "What Is a Backend?",
+      description:
+        "Learn how the backend works with the frontend, server, APIs, and databases.",
       lessons: [
         {
-          id: "what-is-python",
-          title: "What is Python?",
-          explanation: "Python is a high-level, interpreted, general-purpose programming language. Known for its readability and simplicity, it allows developers to write clean, maintainable code quickly. Python runs on an interpreter system, meaning code is executed line-by-line, facilitating quick prototyping and debugging.",
-          codeExample: `# Python syntax is clean and readable
-message = "Hello, DevPath!"
-print(message)
-
-# Arithmetic is straightforward
-total = 10 + 5
-print(total)`,
+          id: "frontend-vs-backend",
+          title: "Frontend vs Backend",
+          explanation:
+            "The frontend is what people see and click. The backend is where data is saved and rules are handled.",
+          codeExample: `Frontend = buttons and screens
+Backend = data and logic`,
           quiz: {
-            question: "What type of language is Python?",
-            options: [
-              "Compiled language",
-              "Interpreted language",
-              "Low-level machine language",
-              "Markup language"
-            ],
-            answerIndex: 1
-          }
+            question: "Which part do users directly see?",
+            options: ["Frontend", "Backend", "Database", "Server log"],
+            answerIndex: 0,
+          },
         },
         {
-          id: "first-program",
-          title: "Your First Program",
-          explanation: "In Python, variables are created when you assign a value to them. Unlike other languages, Python has no command for declaring a variable; it automatically infers the type. The 'print()' function is used to output text to the console.",
-          codeExample: `# Variable declarations
-name = "Alex"
-age = 25
-is_student = True
-
-# F-strings make formatting text easy
-print(f"My name is {name} and I am {age} years old.")`,
+          id: "client-server",
+          title: "Client and Server",
+          explanation:
+            "A client asks for data. A server listens, responds, and sends back the result.",
+          codeExample: `Client -> sends request
+Server -> sends response`,
           quiz: {
-            question: "How do you output text to the screen in Python?",
+            question: "What does a server do?",
             options: [
-              "echo 'text'",
-              "console.log('text')",
-              "print('text')",
-              "system.out.println('text')"
+              "Replies to requests",
+              "Designs icons only",
+              "Deletes the browser",
+              "Writes CSS",
             ],
-            answerIndex: 2
-          }
-        }
+            answerIndex: 0,
+          },
+        },
+      ],
+    },
+    {
+      id: "python-basics",
+      title: "Python Basics",
+      description:
+        "Learn the Python ideas you need before building a backend.",
+      lessons: [
+        {
+          id: "python-values",
+          title: "Variables, Strings, and Numbers",
+          explanation:
+            "Variables store values. Strings hold text. Numbers let you do math.",
+          codeExample: `name = "Mia"
+age = 12
+print(name)
+print(age)`,
+          quiz: {
+            question: "What type of value is \"hello\"?",
+            options: ["String", "Number", "List", "Function"],
+            answerIndex: 0,
+          },
+        },
+        {
+          id: "lists-conditions",
+          title: "Lists and Conditions",
+          explanation:
+            "Lists hold many items. Conditions help your program choose between two or more paths.",
+          codeExample: `scores = [10, 15, 20]
+if scores[0] > 5:
+    print("Great start")`,
+          quiz: {
+            question: "What does an if statement do?",
+            options: [
+              "Checks a condition",
+              "Creates a database",
+              "Draws a button",
+              "Saves an image",
+            ],
+            answerIndex: 0,
+          },
+        },
       ],
       projects: [
         {
-          id: "calculator",
-          title: "Simple CLI Calculator",
-          description: "Build a command-line calculator that takes user input and performs basic arithmetic operations.",
+          id: "cli-calculator",
+          title: "CLI Calculator",
+          description:
+            "Build a small calculator that adds, subtracts, multiplies, and divides.",
           requirements: [
-            "Accept two numbers and an operator (+, -, *, /) from the user via input().",
-            "Perform correct arithmetic based on the operator.",
-            "Handle division-by-zero errors gracefully."
+            "Ask for two numbers.",
+            "Ask for one operator.",
+            "Show the result in the terminal.",
           ],
           folderStructure: `calculator/
 └── main.py`,
-          guide: "1. Use python's `input()` to prompt for numbers and operations.\n2. Wrap the operations in `try-except` blocks to handle any value conversions or arithmetic exceptions (like ZeroDivisionError).\n3. Use conditional `if-elif-else` logic to execute the chosen operation."
-        }
-      ]
+          guide:
+            "1. Read the numbers from the user.\n2. Use if/elif to choose the operation.\n3. Print the answer.",
+        },
+      ],
     },
     {
       id: "functions",
-      title: "Functions in Python",
-      description: "Master reusable blocks of code, parameters, arguments, and return types.",
+      title: "Functions",
+      description:
+        "Learn how to make reusable blocks of code.",
       lessons: [
         {
-          id: "defining-functions",
-          title: "Defining Functions",
-          explanation: "A function is a block of organized, reusable code that performs a single related action. You define functions using the 'def' keyword, followed by the function name and parentheses containing any parameters. Use the 'return' statement to send a value back to the caller.",
-          codeExample: `def greet(name, prefix="Hello"):
-    return f"{prefix}, {name}!"
-
-# Call the function
-msg1 = greet("Alice")
-msg2 = greet("Bob", "Welcome")
-print(msg1) # Output: Hello, Alice!
-print(msg2) # Output: Welcome, Bob!`,
+          id: "create-functions",
+          title: "Creating Functions",
+          explanation:
+            "A function is a named block of code that does one job.",
+          codeExample: `def greet():
+    print("Hello!")`,
           quiz: {
-            question: "Which keyword is used to create a function in Python?",
-            options: ["function", "def", "func", "create"],
-            answerIndex: 1
-          }
-        }
-      ]
-    },
-    {
-      id: "oop",
-      title: "Object-Oriented Programming",
-      description: "Understand classes, objects, inheritance, encapsulation, and method overrides.",
-      lessons: [
+            question: "Which keyword creates a function in Python?",
+            options: ["def", "func", "create", "make"],
+            answerIndex: 0,
+          },
+        },
         {
-          id: "classes-and-objects",
-          title: "Classes and Objects",
-          explanation: "Python is an object-oriented programming language. Almost everything in Python is an object, with its properties and methods. A Class is like an object constructor, or a 'blueprint' for creating objects. The '__init__' method is a special method called a constructor, which initializes attributes on creation.",
-          codeExample: `class User:
-    def __init__(self, username, email):
-        self.username = username
-        self.email = email
-        self.is_active = True
-
-    def deactivate(self):
-        self.is_active = False
-
-# Instantiate an object
-user1 = User("dev_coder", "dev@example.com")
-print(user1.username)
-user1.deactivate()
-print(user1.is_active) # Output: False`,
+          id: "parameters-return",
+          title: "Parameters and Return Values",
+          explanation:
+            "Parameters let you send data into a function. Return values let a function send something back.",
+          codeExample: `def add(a, b):
+    return a + b`,
           quiz: {
-            question: "What is the purpose of the __init__ method in a Python class?",
+            question: "What does return do?",
             options: [
-              "To terminate the class instance",
-              "To define class properties that cannot be changed",
-              "To initialize the object's attributes on creation",
-              "To print information about the class"
+              "Sends a value back",
+              "Deletes the function",
+              "Writes HTML",
+              "Creates a list",
             ],
-            answerIndex: 2
-          }
-        }
-      ]
-    },
-    {
-      id: "apis",
-      title: "APIs & HTTP Basics",
-      description: "Learn about the client-server architecture, JSON format, and RESTful routing principles.",
-      lessons: [
-        {
-          id: "intro-to-apis",
-          title: "Introduction to APIs",
-          explanation: "An API (Application Programming Interface) allows different software applications to communicate with each other. In web development, APIs usually run over the HTTP protocol. The client makes a Request (containing a method, URL, headers, and body), and the server processes it to send back a Response (containing status code, headers, and body, usually in JSON format).",
-          codeExample: `# JSON structure example
-{
-  "id": 101,
-  "title": "Learn FastAPI",
-  "completed": false
-}`,
-          quiz: {
-            question: "Which format is most commonly used for transmitting data in modern web APIs?",
-            options: ["XML", "JSON", "CSV", "YAML"],
-            answerIndex: 1
-          }
-        }
-      ]
-    },
-    {
-      id: "fastapi",
-      title: "FastAPI Framework",
-      description: "Build robust, modern, and auto-documented APIs using the FastAPI framework.",
-      lessons: [
-        {
-          id: "fastapi-basics",
-          title: "Building APIs with FastAPI",
-          explanation: "FastAPI is a modern, fast (high-performance), web framework for building APIs with Python 3.8+ based on standard Python type hints. It automatically generates interactive OpenAPI documentation (Swagger UI) at the '/docs' endpoint. It uses Pydantic to enforce data validation.",
-          codeExample: `from fastapi import FastAPI
-from pydantic import BaseModel
-
-app = FastAPI()
-
-class Item(BaseModel):
-    name: str
-    price: float
-
-@app.get("/")
-def read_root():
-    return {"message": "Welcome to DevPath API!"}
-
-@app.post("/items")
-def create_item(item: Item):
-    return {"status": "created", "item": item}`,
-          quiz: {
-            question: "Which python library does FastAPI use for data validation and serialization?",
-            options: ["Django", "Pydantic", "SQLAlchemy", "Requests"],
-            answerIndex: 1
-          }
-        }
+            answerIndex: 0,
+          },
+        },
       ],
       projects: [
         {
-          id: "todo-api",
-          title: "Todo API",
-          description: "Build a complete REST API using FastAPI for managing a simple list of todo items.",
+          id: "grade-checker",
+          title: "Student Grade Checker",
+          description:
+            "Build a simple program that checks a student's grade and shows a message.",
           requirements: [
-            "Implement CRUD routes: GET /todos, POST /todos, GET /todos/{id}, PUT /todos/{id}, DELETE /todos/{id}.",
-            "Use Pydantic models to validate the incoming todo payload (title, description, completed status).",
-            "Store todos in an in-memory python list."
+            "Use a function for the grade check.",
+            "Pass the score into the function.",
+            "Return or print a simple result.",
           ],
-          folderStructure: `todo_api/
-├── main.py
-├── schemas.py
-└── database.py`,
-          guide: "1. Define schemas in `schemas.py` using Pydantic.\n2. In `main.py`, instantiate your FastAPI app and create an in-memory database list.\n3. Create endpoints for adding, listing, updating, and removing items from the list, returning proper HTTP status codes (like 201 Created)."
-        }
-      ]
+          folderStructure: `grade-checker/
+└── main.py`,
+          guide:
+            "1. Put the grading logic inside one function.\n2. Send the score into the function.\n3. Show whether the grade is pass or fail.",
+        },
+      ],
     },
     {
-      id: "databases",
-      title: "Databases & SQL",
-      description: "Connect APIs to persistent SQL databases using PostgreSQL and SQLAlchemy ORM.",
+      id: "apis-http",
+      title: "APIs and HTTP",
+      description:
+        "Learn how apps ask for data and send data back.",
       lessons: [
         {
-          id: "sql-basics",
-          title: "Relational Databases & SQL",
-          explanation: "Relational databases store data in structured tables linked by relationships. SQL (Structured Query Language) is the standard language to query, filter, and insert records. Object Relational Mappers (ORMs) like SQLAlchemy allow Python developers to interact with the database using classes and objects instead of writing raw SQL statements.",
-          codeExample: `# SQL Statement Example
-# SELECT * FROM users WHERE active = true;
-
-# SQLAlchemy representation
-class DBUser(Base):
-    __tablename__ = "users"
-    id = Column(Integer, primaryKey=True)
-    username = Column(String, unique=True)
-    is_active = Column(Boolean, default=True)`,
+          id: "get-post",
+          title: "GET and POST",
+          explanation:
+            "GET asks for data. POST sends new data to the server.",
+          codeExample: `GET /students
+POST /students`,
           quiz: {
-            question: "What is an ORM (Object Relational Mapper) used for?",
+            question: "Which request type is used to send new data?",
+            options: ["GET", "POST", "DELETE", "HEAD"],
+            answerIndex: 1,
+          },
+        },
+        {
+          id: "request-response-json",
+          title: "Request, Response, and JSON",
+          explanation:
+            "A request goes to the server. A response comes back. JSON is a common format for sending data.",
+          codeExample: `{
+  "name": "Ava",
+  "age": 10
+}`,
+          quiz: {
+            question: "What is JSON often used for?",
             options: [
-              "Translating database schema into markdown documentation",
-              "Interacting with database tables using object-oriented code",
-              "Encrypting web requests",
-              "Speeding up internet connections"
+              "Sending data",
+              "Drawing buttons",
+              "Writing CSS",
+              "Deleting files",
             ],
-            answerIndex: 1
-          }
-        }
+            answerIndex: 0,
+          },
+        },
+      ],
+      projects: [
+        {
+          id: "student-api-sim",
+          title: "Student API Simulation",
+          description:
+            "Practice the idea of an API with simple student data.",
+          requirements: [
+            "Create a student object.",
+            "Pretend to send and receive JSON.",
+            "Show the idea of request and response.",
+          ],
+          folderStructure: `student-api/
+└── main.py`,
+          guide:
+            "1. Make a sample student record.\n2. Return it as JSON.\n3. Practice reading the response like an API client.",
+        },
+      ],
+    },
+    {
+      id: "fastapi-basics",
+      title: "FastAPI Basics",
+      description:
+        "Create your first backend app with FastAPI.",
+      lessons: [
+        {
+          id: "install-fastapi",
+          title: "Installing FastAPI",
+          explanation:
+            "FastAPI is a Python framework for building APIs. It is a good choice for simple, clean backend apps.",
+          codeExample: `pip install fastapi uvicorn`,
+          quiz: {
+            question: "What is FastAPI used for?",
+            options: [
+              "Building APIs",
+              "Editing images",
+              "Writing CSS",
+              "Making icons",
+            ],
+            answerIndex: 0,
+          },
+        },
+        {
+          id: "create-routes",
+          title: "Creating Routes",
+          explanation:
+            "Routes are paths your server responds to, such as `/` or `/students`.",
+          codeExample: `from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/")
+def home():
+    return {"message": "Hello!"}`,
+          quiz: {
+            question: "What is a route?",
+            options: [
+              "A server path",
+              "A color choice",
+              "A type of list",
+              "A font style",
+            ],
+            answerIndex: 0,
+          },
+        },
+      ],
+      projects: [
+        {
+          id: "hello-api",
+          title: "Hello API",
+          description:
+            "Create a tiny API that returns a friendly message.",
+          requirements: [
+            "Create one GET route.",
+            "Return a JSON message.",
+            "Run the server successfully.",
+          ],
+          folderStructure: `hello-api/
+├── main.py`,
+          guide:
+            "1. Make a FastAPI app.\n2. Add one route.\n3. Run the app and open it in the browser.",
+        },
+      ],
+    },
+    {
+      id: "crud-operations",
+      title: "CRUD Operations",
+      description:
+        "Learn the four main data actions: create, read, update, and delete.",
+      lessons: [
+        {
+          id: "crud-idea",
+          title: "CRUD in Simple Words",
+          explanation:
+            "CRUD means Create, Read, Update, and Delete. These are the main actions for working with data.",
+          codeExample: `Create -> add a note
+Read -> view a note
+Update -> edit a note
+Delete -> remove a note`,
+          quiz: {
+            question: "What does the C in CRUD mean?",
+            options: ["Create", "Check", "Connect", "Compare"],
+            answerIndex: 0,
+          },
+        },
+        {
+          id: "todo-api-pattern",
+          title: "CRUD API Pattern",
+          explanation:
+            "A CRUD API often uses GET, POST, PUT, and DELETE routes to manage data.",
+          codeExample: `GET /notes
+POST /notes
+PUT /notes/1
+DELETE /notes/1`,
+          quiz: {
+            question: "Which method is usually used to update data?",
+            options: ["GET", "POST", "PUT", "COPY"],
+            answerIndex: 2,
+          },
+        },
       ],
       projects: [
         {
           id: "notes-api",
-          title: "Notes API with Database",
-          description: "Extend your API capabilities by persisting data in a relational database using SQLAlchemy and PostgreSQL.",
+          title: "Notes API",
+          description:
+            "Build a small API for adding, reading, editing, and deleting notes.",
           requirements: [
-            "Configure SQLAlchemy connection string.",
-            "Create a Notes table with id, title, content, and created_at fields.",
-            "Implement complete CRUD operations that read/write directly to the database."
+            "Create routes for all CRUD actions.",
+            "Store notes in a simple list first.",
+            "Return clear JSON responses.",
           ],
-          folderStructure: `notes_api/
+          folderStructure: `notes-api/
+├── main.py`,
+          guide:
+            "1. Start with an in-memory list.\n2. Add routes for each CRUD action.\n3. Test each route one by one.",
+        },
+      ],
+    },
+    {
+      id: "database-basics",
+      title: "Database Basics",
+      description:
+        "Learn how data is stored in tables and saved on the backend.",
+      lessons: [
+        {
+          id: "tables-rows-columns",
+          title: "Tables, Rows, and Columns",
+          explanation:
+            "A database table is like a spreadsheet. Rows hold records and columns hold fields.",
+          codeExample: `Table: students
+Row: one student record
+Column: name, age, class`,
+          quiz: {
+            question: "What does a row hold?",
+            options: ["One record", "A file type", "A button", "A color"],
+            answerIndex: 0,
+          },
+        },
+        {
+          id: "save-data",
+          title: "Saving Data",
+          explanation:
+            "Saving data means putting it into a database so it is not lost when the app closes.",
+          codeExample: `INSERT INTO notes (title, content)
+VALUES ("Hello", "My first note");`,
+          quiz: {
+            question: "Why do we save data in a database?",
+            options: [
+              "So it stays after the app closes",
+              "So CSS loads faster",
+              "So images shrink",
+              "So the browser changes color",
+            ],
+            answerIndex: 0,
+          },
+        },
+      ],
+      projects: [
+        {
+          id: "notes-database",
+          title: "Notes Database",
+          description:
+            "Store notes in a small SQLite database instead of a list.",
+          requirements: [
+            "Create a notes table.",
+            "Add title and content fields.",
+            "Save at least one note.",
+          ],
+          folderStructure: `notes-db/
 ├── main.py
-├── models.py
-├── schemas.py
-└── database.py`,
-          guide: "1. Define models in `models.py` inheriting from declarative base.\n2. Set up engine and SessionLocal in `database.py`.\n3. Write dependency function `get_db` to yield session and close it automatically.\n4. Replace in-memory queries in FastAPI endpoints with session queries: `db.query(Note).all()`."
-        }
-      ]
+└── notes.db`,
+          guide:
+            "1. Create a table for notes.\n2. Insert a record.\n3. Read the record back and show it.",
+        },
+      ],
     },
     {
-      id: "authentication",
-      title: "Authentication & Security",
-      description: "Protect endpoints using user signups, hashed passwords, and JSON Web Tokens (JWT).",
+      id: "connect-frontend",
+      title: "Connecting a Frontend",
+      description:
+        "Learn how a webpage can ask the backend for data.",
       lessons: [
         {
-          id: "jwt-auth",
-          title: "JWT Authentication",
-          explanation: "Security is paramount in backend services. Passwords must never be stored in plaintext; they are hashed using secure algorithms like bcrypt. When a user logs in, the server generates a signed JSON Web Token (JWT) that encodes user info and an expiration date. The client passes this token in subsequent request headers (Authorization: Bearer <token>) to access protected endpoints.",
-          codeExample: `from jose import jwt
-from passlib.context import CryptContext
-
-pwd_context = CryptContext(schemes=["bcrypt"])
-SECRET_KEY = "supersecretkey"
-ALGORITHM = "HS256"
-
-# Hash a password
-hashed_pw = pwd_context.hash("userpassword")
-
-# Create a token
-token = jwt.encode({"sub": "username"}, SECRET_KEY, algorithm=ALGORITHM)`,
+          id: "fetch-api",
+          title: "Fetch API",
+          explanation:
+            "The Fetch API lets JavaScript ask a server for data.",
+          codeExample: `fetch("/api/notes")
+  .then((res) => res.json())
+  .then((data) => console.log(data));`,
           quiz: {
-            question: "Why should passwords never be stored in plain text?",
+            question: "What does fetch do?",
             options: [
-              "Because it takes up too much database space",
-              "Because databases do not support strings",
-              "Because a database breach would expose all user passwords instantly",
-              "Because hashing makes code execute faster"
+              "Sends a request to a server",
+              "Draws a database",
+              "Creates CSS classes",
+              "Deletes HTML",
             ],
-            answerIndex: 2
-          }
-        }
-      ]
+            answerIndex: 0,
+          },
+        },
+        {
+          id: "display-data",
+          title: "Displaying Data",
+          explanation:
+            "After data comes back, you can put it on the page in a list or card.",
+          codeExample: `notes.forEach((note) => {
+  console.log(note.title);
+});`,
+          quiz: {
+            question: "What do you do after receiving data?",
+            options: [
+              "Show it on the page",
+              "Delete the browser",
+              "Turn it into a font",
+              "Ignore it",
+            ],
+            answerIndex: 0,
+          },
+        },
+      ],
+      projects: [
+        {
+          id: "notes-viewer",
+          title: "Notes Viewer",
+          description:
+            "Build a simple page that shows notes from your API.",
+          requirements: [
+            "Fetch notes from the backend.",
+            "Show the note title and content.",
+            "Handle a loading state if you want an extra challenge.",
+          ],
+          folderStructure: `notes-viewer/
+├── index.html
+├── style.css
+└── app.js`,
+          guide:
+            "1. Fetch notes when the page loads.\n2. Put the results into the page.\n3. Add a simple loading message.",
+        },
+      ],
     },
     {
-      id: "deployment",
-      title: "Deployment & Production",
-      description: "Deploy your FastAPI application live to cloud platforms like Render or Fly.io.",
+      id: "final-project",
+      title: "Final Project",
+      description:
+        "Build a small student manager that uses a backend and a simple frontend.",
       lessons: [
         {
-          id: "deploy-rendering",
-          title: "Deploying to Render",
-          explanation: "To make your API accessible worldwide, you deploy it to cloud hosting platforms like Render or Fly.io. This requires configuring environment variables for secrets (like SECRET_KEY and DATABASE_URL), running production-ready web servers like Uvicorn or Gunicorn, and utilizing packages like Gunicorn to handle concurrent processes.",
-          codeExample: `# Starting the production server
-# uvicorn main:app --host 0.0.0.0 --port 8000`,
+          id: "plan-student-manager",
+          title: "Plan the App",
+          explanation:
+            "Start with one small idea. The student manager should let users add, see, and delete students.",
+          codeExample: `Final project:
+- Add student
+- Show list
+- Delete student`,
           quiz: {
-            question: "Which server command is typically used to run a FastAPI app in production?",
+            question: "What is a good first step for the final project?",
             options: [
-              "python main.py",
-              "uvicorn main:app --host 0.0.0.0",
-              "run fastapi",
-              "npm start"
+              "Plan the features",
+              "Add every feature at once",
+              "Skip testing",
+              "Ignore the data model",
             ],
-            answerIndex: 1
-          }
-        }
-      ]
-    }
-  ]
+            answerIndex: 0,
+          },
+        },
+        {
+          id: "build-and-test-student-manager",
+          title: "Build and Test",
+          explanation:
+            "Use a backend API and a small frontend form to make the app work step by step.",
+          codeExample: `Features:
+- GET /students
+- POST /students
+- DELETE /students/{id}`,
+          quiz: {
+            question: "Which feature removes a student?",
+            options: ["GET /students", "POST /students", "DELETE /students/{id}", "PUT /students"],
+            answerIndex: 2,
+          },
+        },
+      ],
+      projects: [
+        {
+          id: "student-manager",
+          title: "Student Manager",
+          description:
+            "Build the final student manager with a small frontend and backend.",
+          requirements: [
+            "Add a student form.",
+            "Show a student list.",
+            "Delete students from the list.",
+          ],
+          folderStructure: `student-manager/
+├── backend/
+└── frontend/`,
+          guide:
+            "1. Build the backend routes first.\n2. Connect the frontend with fetch.\n3. Finish with add and delete actions.",
+        },
+      ],
+    },
+  ],
 };

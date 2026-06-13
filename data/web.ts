@@ -2,295 +2,515 @@ import { CareerPath } from "./types";
 
 export const webPath: CareerPath = {
   id: "web",
-  title: "Web Development",
+  title: "Web Fundamentals",
   emoji: "🌐",
-  description: "Web development focuses on building visual interfaces, interactive components, and responsive experiences for browsers.",
+  description:
+    "A beginner path for building simple, responsive websites with HTML, CSS, and JavaScript.",
   skills: [
-    "HTML5 Structure & Semantic Layouts",
-    "CSS3 Layouts, Animations & Responsive Design",
-    "JavaScript ES6+ Programming",
-    "React Library Framework",
-    "Asset Bundling & Development Tools (Vite)"
+    "Write basic HTML pages",
+    "Style pages with CSS",
+    "Use simple JavaScript",
+    "Build responsive layouts",
+    "Create small website projects",
   ],
   technologies: [
     { name: "HTML", emoji: "🏷️" },
     { name: "CSS", emoji: "🎨" },
     { name: "JavaScript", emoji: "⚡" },
-    { name: "React", emoji: "⚛️" },
-    { name: "Vite", emoji: "📦" }
   ],
-  learningTimeline: "3 - 5 Months",
+  learningTimeline: "5 - 10 Hours",
   careerOpportunities: [
-    "Frontend Developer",
-    "Web Developer",
-    "UI Engineer",
-    "React Developer"
+    "Beginner Web Developer",
+    "Front-End Learner",
+    "UI Assistant",
+    "Portfolio Builder",
   ],
   roadmap: [
     {
-      id: "html-css-basics",
-      title: "HTML & CSS Basics",
-      description: "Learn how to structure web pages using HTML elements and style them using basic CSS properties.",
+      id: "intro-web",
+      title: "Introduction to the Web",
+      description:
+        "Learn what a website is, how it works in a browser, and what tools you need to begin.",
       lessons: [
         {
-          id: "html-tags",
-          title: "HTML Tags & Document Structure",
-          explanation: "HTML (HyperText Markup Language) is the standard skeleton of every webpage. It uses tags (like <h1>, <p>, <div>, and <a>) to define content. Semantic tags like <header>, <main>, and <footer> inform the browser and search engines about the structural content layout, improving SEO.",
+          id: "what-is-website",
+          title: "What Is a Website?",
+          explanation:
+            "A website is a set of pages that people open in a browser. HTML gives the page structure, CSS adds style, and JavaScript adds action.",
           codeExample: `<!DOCTYPE html>
 <html>
   <head>
-    <title>My First Webpage</title>
+    <title>My First Site</title>
   </head>
   <body>
-    <h1>Welcome to DevPath</h1>
-    <p>HTML is easy to learn!</p>
+    <h1>Hello, world!</h1>
   </body>
 </html>`,
           quiz: {
-            question: "Which tag is used to define the primary heading of a page?",
-            options: ["<heading>", "<h6>", "<h1>", "<title>"],
-            answerIndex: 2
-          }
+            question: "Which language gives a page its structure?",
+            options: ["HTML", "CSS", "JavaScript", "SQL"],
+            answerIndex: 0,
+          },
         },
         {
-          id: "css-styling",
-          title: "CSS Styling and Colors",
-          explanation: "CSS (Cascading Style Sheets) is used to style and lay out web pages. You select HTML elements and apply properties like background-color, font-size, margin, padding, and border to define visual appearances.",
-          codeExample: `/* Styles the h1 tag */
-h1 {
-  color: #2563eb;
-  font-size: 24px;
-  margin-bottom: 15px;
-}`,
+          id: "web-tools",
+          title: "Your First Tools",
+          explanation:
+            "To start, you only need a code editor and a browser. Save your file, refresh the page, and use the browser to check how the page looks.",
+          codeExample: `// Simple beginner workflow
+1. Write code in index.html
+2. Save the file
+3. Refresh the browser`,
           quiz: {
-            question: "Which CSS property is used to change the text color of an element?",
-            options: ["text-color", "color", "font-color", "style-color"],
-            answerIndex: 1
-          }
-        }
-      ]
+            question: "What is the best tool to view your page while learning?",
+            options: ["A browser", "A database", "A calculator", "A terminal only"],
+            answerIndex: 0,
+          },
+        },
+      ],
     },
     {
-      id: "responsive-design",
-      title: "Responsive Design & Flexbox",
-      description: "Master flexible layouts, grids, media queries, and responsive structures for mobile and desktop screens.",
+      id: "html-basics",
+      title: "HTML Basics",
+      description:
+        "Practice the tags you need to write simple text, links, images, lists, and buttons.",
       lessons: [
         {
-          id: "flexbox-layouts",
-          title: "Flexbox and Layouts",
-          explanation: "Flexbox (Flexible Box Layout) is a one-dimensional layout model that makes it easy to align, distribute, and space elements in columns or rows. By applying 'display: flex' on a container, you gain access to positioning properties like 'justify-content' (align along main axis) and 'align-items' (align along cross axis).",
-          codeExample: `.container {
+          id: "html-text",
+          title: "Headings and Paragraphs",
+          explanation:
+            "Use headings for titles and paragraphs for normal text. This helps people read your page in a clear order.",
+          codeExample: `<h1>My Profile</h1>
+<p>Hello! I am learning web development.</p>`,
+          quiz: {
+            question: "Which tag is best for the main title of a page?",
+            options: ["<p>", "<h1>", "<img>", "<ul>"],
+            answerIndex: 1,
+          },
+        },
+        {
+          id: "html-links-images",
+          title: "Links, Images, and Lists",
+          explanation:
+            "Links take users to another page. Images show pictures. Lists help you show items in order or as bullet points.",
+          codeExample: `<a href="https://example.com">Visit site</a>
+<img src="photo.jpg" alt="Profile photo" />
+<ul>
+  <li>Reading</li>
+  <li>Coding</li>
+</ul>`,
+          quiz: {
+            question: "Which tag is used to show an image?",
+            options: ["<link>", "<img>", "<photo>", "<picture-text>"],
+            answerIndex: 1,
+          },
+        },
+      ],
+      projects: [
+        {
+          id: "personal-profile-page",
+          title: "Personal Profile Page",
+          description:
+            "Build a simple page that shows your name, short bio, photo, and favorite links.",
+          requirements: [
+            "Add a title and a short introduction.",
+            "Show at least one image.",
+            "Include a list of hobbies or skills.",
+          ],
+          folderStructure: `profile-page/
+├── index.html
+└── images/`,
+          guide:
+            "1. Start with a heading and a paragraph.\n2. Add one image with alt text.\n3. Add a list of your hobbies or skills.\n4. Add one link button to your favorite site.",
+        },
+      ],
+    },
+    {
+      id: "css-basics",
+      title: "CSS Basics",
+      description:
+        "Learn how to make your page look nice with colors, fonts, spacing, and borders.",
+      lessons: [
+        {
+          id: "css-colors-fonts",
+          title: "Colors and Fonts",
+          explanation:
+            "CSS controls the look of your page. You can change text color, font size, font family, and background color.",
+          codeExample: `h1 {
+  color: #1f2937;
+  font-size: 32px;
+}
+
+body {
+  background-color: #f9fafb;
+  font-family: Arial, sans-serif;
+}`,
+          quiz: {
+            question: "Which CSS property changes text color?",
+            options: ["font-style", "color", "text-size", "background"],
+            answerIndex: 1,
+          },
+        },
+        {
+          id: "css-spacing",
+          title: "Backgrounds, Spacing, and Borders",
+          explanation:
+            "Margins add space outside an element. Padding adds space inside it. Borders help separate sections clearly.",
+          codeExample: `.card {
+  background: white;
+  padding: 16px;
+  margin: 12px;
+  border: 1px solid #ddd;
+}`,
+          quiz: {
+            question: "What does padding do?",
+            options: [
+              "Adds space inside an element",
+              "Adds space outside an element",
+              "Deletes the border",
+              "Changes the page title",
+            ],
+            answerIndex: 0,
+          },
+        },
+      ],
+      projects: [
+        {
+          id: "styled-profile-page",
+          title: "Styled Profile Page",
+          description:
+            "Improve your profile page using colors, spacing, and simple card styles.",
+          requirements: [
+            "Use at least two text colors.",
+            "Add padding and margin to separate sections.",
+            "Add a border or card style to one section.",
+          ],
+          folderStructure: `profile-page/
+├── index.html
+└── style.css`,
+          guide:
+            "1. Pick a background color and text color.\n2. Add padding to make the content feel roomy.\n3. Use a border radius to make the card softer.",
+        },
+      ],
+    },
+    {
+      id: "layouts",
+      title: "Layouts",
+      description:
+        "Learn how to place content side by side and build a simple page structure.",
+      lessons: [
+        {
+          id: "flexbox-basics",
+          title: "Flexbox Basics",
+          explanation:
+            "Flexbox helps you line up items in rows or columns. It is useful for buttons, cards, and page headers.",
+          codeExample: `.row {
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
   align-items: center;
 }`,
           quiz: {
-            question: "Which property activates Flexbox on a container?",
-            options: ["display: block", "display: flex", "flex-direction: row", "align: flex"],
-            answerIndex: 1
-          }
-        }
-      ]
-    },
-    {
-      id: "js-fundamentals",
-      title: "JavaScript Fundamentals",
-      description: "Learn standard programming syntax, variables, loop types, functions, and manipulating DOM elements.",
-      lessons: [
+            question: "Which CSS value turns on Flexbox?",
+            options: ["display: block", "display: flex", "position: fixed", "float: left"],
+            answerIndex: 1,
+          },
+        },
         {
-          id: "js-variables-dom",
-          title: "Variables, Functions, and the DOM",
-          explanation: "JavaScript brings web pages to life by adding interactivity. You declare variables with 'let' and 'const', write operations using conditional blocks, and use the Document Object Model (DOM) API to programmatically read/update HTML elements based on user events (like button clicks).",
-          codeExample: `// Select a button element
-const btn = document.getElementById("myBtn");
-let count = 0;
-
-btn.addEventListener("click", () => {
-  count++;
-  document.getElementById("counter-text").innerText = count;
-});`,
+          id: "page-sections",
+          title: "Navigation and Sections",
+          explanation:
+            "A simple website often has a header, main section, and footer. A navigation bar helps people move around the page.",
+          codeExample: `<header>
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#about">About</a>
+  </nav>
+</header>`,
           quiz: {
-            question: "Which keyword is used to declare a variable that cannot be reassigned?",
-            options: ["let", "const", "var", "immutable"],
-            answerIndex: 1
-          }
-        }
+            question: "What is the purpose of a navigation bar?",
+            options: [
+              "To play audio",
+              "To help users move around the site",
+              "To store images",
+              "To write JavaScript",
+            ],
+            answerIndex: 1,
+          },
+        },
       ],
       projects: [
         {
-          id: "interactive-counter",
-          title: "Interactive Counter Page",
-          description: "Build a web page with increase, decrease, and reset buttons that dynamically update a counter number.",
+          id: "simple-landing-page",
+          title: "Simple Landing Page",
+          description:
+            "Build a one-page site with a header, hero section, and call-to-action button.",
           requirements: [
-            "Create an HTML layout displaying a count number.",
-            "Write CSS to center align elements and style the buttons nicely.",
-            "Add JavaScript listeners for click events to increment, decrement, and reset the counter value."
+            "Add a top navigation bar.",
+            "Create a hero section with a headline and button.",
+            "Use Flexbox to align items.",
+          ],
+          folderStructure: `landing-page/
+├── index.html
+└── style.css`,
+          guide:
+            "1. Plan the header, hero, and footer.\n2. Use Flexbox to place text and a button.\n3. Keep the design simple and readable.",
+        },
+      ],
+    },
+    {
+      id: "responsive-design",
+      title: "Responsive Design",
+      description:
+        "Make sure your page looks good on phones, tablets, and desktop screens.",
+      lessons: [
+        {
+          id: "mobile-desktop",
+          title: "Mobile vs Desktop",
+          explanation:
+            "Phones have smaller screens than laptops. A responsive page changes its layout so it stays easy to read everywhere.",
+          codeExample: `/* Keep content readable on smaller screens */
+.container {
+  width: 100%;
+  max-width: 900px;
+}`,
+          quiz: {
+            question: "Why do we make websites responsive?",
+            options: [
+              "So they only work on phones",
+              "So they look good on different screen sizes",
+              "So they need no CSS",
+              "So they load music",
+            ],
+            answerIndex: 1,
+          },
+        },
+        {
+          id: "media-queries",
+          title: "Media Queries",
+          explanation:
+            "Media queries let you change styles when the screen gets smaller or larger.",
+          codeExample: `@media (max-width: 600px) {
+  .menu {
+    flex-direction: column;
+  }
+}`,
+          quiz: {
+            question: "What does a media query help you do?",
+            options: [
+              "Change styles for different screen sizes",
+              "Save user passwords",
+              "Add server routes",
+              "Create images",
+            ],
+            answerIndex: 0,
+          },
+        },
+      ],
+      projects: [
+        {
+          id: "responsive-landing-page",
+          title: "Responsive Landing Page",
+          description:
+            "Improve your landing page so it works on both mobile and desktop.",
+          requirements: [
+            "Stack content on small screens.",
+            "Keep spacing comfortable on large screens.",
+            "Make buttons easy to tap on mobile.",
+          ],
+          folderStructure: `landing-page/
+├── index.html
+└── style.css`,
+          guide:
+            "1. Start with the desktop layout.\n2. Add one media query for small screens.\n3. Check that text and buttons still fit well.",
+        },
+      ],
+    },
+    {
+      id: "javascript-basics",
+      title: "JavaScript Basics",
+      description:
+        "Learn the first JavaScript ideas you need to make a page interactive.",
+      lessons: [
+        {
+          id: "variables-functions",
+          title: "Variables and Functions",
+          explanation:
+            "Variables store values. Functions are small blocks of code that do one job.",
+          codeExample: `let name = "Ava";
+
+function greet() {
+  console.log("Hello " + name);
+}`,
+          quiz: {
+            question: "What does a variable do?",
+            options: [
+              "Stores data",
+              "Creates CSS",
+              "Changes the browser",
+              "Deletes files",
+            ],
+            answerIndex: 0,
+          },
+        },
+        {
+          id: "events",
+          title: "Events",
+          explanation:
+            "Events happen when users click, type, or move the mouse. JavaScript can respond to those actions.",
+          codeExample: `button.addEventListener("click", function () {
+  console.log("Button clicked");
+});`,
+          quiz: {
+            question: "Which action is an event?",
+            options: ["A button click", "A CSS color", "A folder name", "A font size"],
+            answerIndex: 0,
+          },
+        },
+      ],
+      projects: [
+        {
+          id: "click-counter",
+          title: "Click Counter",
+          description:
+            "Build a button that increases a number every time it is clicked.",
+          requirements: [
+            "Show one number on the page.",
+            "Add a button to increase the number.",
+            "Add a reset button if you want an extra challenge.",
           ],
           folderStructure: `counter/
 ├── index.html
 ├── style.css
 └── app.js`,
-          guide: "1. Link your `app.js` and `style.css` in the HTML head.\n2. In JS, select the buttons and the counter paragraph element using querySelector.\n3. Keep a mutable `let count = 0` variable. Update the innerText of the paragraph on every button click."
-        }
-      ]
+          guide:
+            "1. Create a number variable.\n2. Update the number on button click.\n3. Show the new value on the page.",
+        },
+      ],
     },
     {
-      id: "react-core",
-      title: "React Core Concepts",
-      description: "Transition to React. Undergo component styling, passing properties, and managing reactivity with hooks.",
+      id: "dom-manipulation",
+      title: "DOM Manipulation",
+      description:
+        "Learn how to change page content after the page loads.",
       lessons: [
         {
-          id: "react-components-state",
-          title: "Components, Props, and State",
-          explanation: "React is a popular UI library based on reusable component blocks. Props are read-only properties passed down from parents, while State is local mutable data managed within the component. The 'useState' hook is used to declare state variables that re-render the component automatically when modified.",
-          codeExample: `import React, { useState } from 'react';
-
-function CounterButton({ label }) {
-  const [count, setCount] = useState(0);
-
-  return (
-    <button onClick={() => setCount(count + 1)}>
-      {label}: {count}
-    </button>
-  );
-}`,
+          id: "select-elements",
+          title: "Selecting Elements",
+          explanation:
+            "The DOM is the page structure that JavaScript can read and change. You can select elements by id, class, or tag.",
+          codeExample: `const title = document.getElementById("title");
+const button = document.querySelector(".btn");`,
           quiz: {
-            question: "Which React hook is used to create reactive, mutable values inside a functional component?",
-            options: ["useEffect", "useState", "useContext", "useRef"],
-            answerIndex: 1
-          }
-        }
+            question: "What does the DOM represent?",
+            options: [
+              "The page structure JavaScript can work with",
+              "A CSS file",
+              "A database table",
+              "A type of image",
+            ],
+            answerIndex: 0,
+          },
+        },
+        {
+          id: "change-text",
+          title: "Changing Text and Buttons",
+          explanation:
+            "You can change text, show messages, or react to a button press by updating the DOM.",
+          codeExample: `message.textContent = "Welcome!";
+button.addEventListener("click", () => {
+  message.textContent = "Thanks for clicking";
+});`,
+          quiz: {
+            question: "Which property changes the text inside an element?",
+            options: ["textContent", "className", "href", "padding"],
+            answerIndex: 0,
+          },
+        },
       ],
       projects: [
         {
-          id: "todo-web",
-          title: "Todo App (React)",
-          description: "Build a client-side Todo web app where users can add, toggle, and delete todo tasks.",
+          id: "quote-generator",
+          title: "Quote Generator",
+          description:
+            "Build a small app that shows a new quote when the user clicks a button.",
           requirements: [
-            "Use React components to structure your app (TodoList, TodoItem, TodoForm).",
-            "Store todos in a state array. Allow users to add a new todo and mark it complete.",
-            "Permit deleting items from the list."
+            "Show one quote on the page.",
+            "Add a button that changes the quote.",
+            "Style the quote box clearly.",
           ],
-          folderStructure: `todo-react/
-├── src/
-│   ├── App.jsx
-│   ├── components/
-│   │   ├── TodoForm.jsx
-│   │   ├── TodoItem.jsx
-│   │   └── TodoList.jsx
-│   └── index.css
-├── package.json
-└── index.html`,
-          guide: "1. Create an array of object models for todos: `{ id: number, text: string, completed: boolean }`.\n2. Pass state callbacks as props from `App.jsx` down to children components.\n3. Make sure to use key properties on array mappings to help React perform efficient re-renders."
-        }
-      ]
+          folderStructure: `quote-generator/
+├── index.html
+├── style.css
+└── app.js`,
+          guide:
+            "1. Store a few quotes in an array.\n2. Pick one quote when the button is clicked.\n3. Put the new quote into the page.",
+        },
+      ],
     },
     {
-      id: "vite-setup",
-      title: "Vite & React Setup",
-      description: "Understand the modern build pipelines, scaffolding applications, and production bundling.",
+      id: "final-project",
+      title: "Final Project",
+      description:
+        "Choose a small website and build it from start to finish.",
       lessons: [
         {
-          id: "vite-scaffolding",
-          title: "Modern Build Tools & Folder Structure",
-          explanation: "Vite is a fast development server and build tool that replaces older pipelines like Create React App. It bundles assets efficiently using ES modules. A typical Vite React project has a specific structure: node_modules for dependencies, src for code, index.html at root, and vite.config.js for configurations.",
-          codeExample: `# Scaffold a project using Vite
-# npm create vite@latest my-app -- --template react`,
+          id: "plan-your-site",
+          title: "Plan Your Site",
+          explanation:
+            "Pick one simple idea and sketch the sections before you start coding. Good choices are a portfolio, coffee shop, gaming profile, or student club site.",
+          codeExample: `Project idea:
+- Header
+- Hero section
+- About section
+- Contact button`,
           quiz: {
-            question: "What is Vite primarily used for in modern React development?",
+            question: "What should you do before building your final project?",
             options: [
-              "Managing databases",
-              "Fast development serving and bundle building",
-              "Writing unit tests",
-              "Hosting servers on the cloud"
+              "Plan the sections first",
+              "Skip HTML",
+              "Remove the browser",
+              "Write only CSS",
             ],
-            answerIndex: 1
-          }
-        }
+            answerIndex: 0,
+          },
+        },
+        {
+          id: "build-and-polish",
+          title: "Build and Polish",
+          explanation:
+            "Use HTML for structure, CSS for style, and JavaScript for one small interaction like a button or menu.",
+          codeExample: `Final project checklist:
+1. Navigation bar
+2. Multiple sections
+3. Images
+4. Responsive layout
+5. One interactive button`,
+          quiz: {
+            question: "Which part makes your page interactive?",
+            options: ["HTML", "CSS", "JavaScript", "A favicon"],
+            answerIndex: 2,
+          },
+        },
       ],
       projects: [
         {
           id: "portfolio-website",
-          title: "Developer Portfolio Website",
-          description: "Design and build a multi-section responsive portfolio website showcasing your bio, skills, and projects.",
+          title: "Portfolio Website",
+          description:
+            "Build a simple personal website that shows who you are and what you made.",
           requirements: [
-            "Scaffold a React application using Vite.",
-            "Build reusable React components for Header, Hero, Skills, Projects, and Contact sections.",
-            "Make it fully responsive using responsive CSS grid or flex layouts."
+            "Add a navigation bar.",
+            "Include multiple sections.",
+            "Make it responsive and readable.",
           ],
           folderStructure: `portfolio/
-├── src/
-│   ├── components/
-│   │   ├── Contact.jsx
-│   │   ├── Header.jsx
-│   │   ├── Projects.jsx
-│   │   └── Skills.jsx
-│   ├── App.jsx
-│   └── index.css
 ├── index.html
-└── package.json`,
-          guide: "1. Outline your sections before coding.\n2. Design clean cards for your project showcases.\n3. Use state to build a mobile navigation menu toggle for narrow screens."
-        }
-      ]
-    },
-    {
-      id: "react-apis",
-      title: "APIs in React",
-      description: "Connect your front-end components to server-side APIs using fetching operations and rendering cycles.",
-      lessons: [
-        {
-          id: "useEffect-fetching",
-          title: "Fetching Data with useEffect",
-          explanation: "React components interact with the external world using side effects. The 'useEffect' hook executes actions (like loading remote data from REST APIs) when a component mounts. Combined with standard fetch() or Axios, you store the output in state variables to display on screen.",
-          codeExample: `import React, { useState, useEffect } from 'react';
-
-function UserList() {
-  const [users, setUsers] = useState([]);
-  
-  useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/users")
-      .then(res => res.json())
-      .then(data => setUsers(data));
-  }, []); // Empty dependency array runs once on mount
-
-  return (
-    <ul>
-      {users.map(u => <li key={u.id}>{u.name}</li>)}
-    </ul>
-  );
-}`,
-          quiz: {
-            question: "Which dependency array argument triggers useEffect to run exactly once when a component mounts?",
-            options: [
-              "No dependency array argument",
-              "An array containing all state values: [state1, state2]",
-              "An empty array: []",
-              "An array containing mounting states: ['mount']"
-            ],
-            answerIndex: 2
-          }
-        }
+├── style.css
+└── app.js`,
+          guide:
+            "1. Choose one idea and keep it small.\n2. Add content section by section.\n3. Finish with a button or small interaction.",
+        },
       ],
-      projects: [
-        {
-          id: "weather-app",
-          title: "Weather Search Application",
-          description: "Build a weather app that consumes a public weather API to fetch temperature and forecast details by city query.",
-          requirements: [
-            "Incorporate a search field that collects city inputs.",
-            "Perform fetch calls to openweathermap.org API.",
-            "Display visual indicators: loading status, error messages, temperature, wind speeds, and custom weather icons."
-          ],
-          folderStructure: `weather-app/
-├── src/
-│   ├── App.jsx
-│   └── index.css
-├── index.html
-└── package.json`,
-          guide: "1. Register on OpenWeatherMap to obtain an API key.\n2. Store user search query in state. Trigger a fetch call on submit.\n3. Manage load states: `isLoading = true` while waiting, set to false on return to prevent UI glitches."
-        }
-      ]
-    }
-  ]
+    },
+  ],
 };
