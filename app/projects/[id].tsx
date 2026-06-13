@@ -9,6 +9,7 @@ import {
 import { router, useLocalSearchParams } from "expo-router";
 import { careerPaths } from "../../data";
 import AppHeader from "../../components/AppHeader";
+import { useProgress } from "../../context/ProgressContext";
 import {
   Colors,
   FontSize,
@@ -25,6 +26,8 @@ export default function ProjectScreen() {
     topicId,
     path: pathId = "backend",
   } = useLocalSearchParams<{ id: string; topicId: string; path: string }>();
+
+  const { completeProject, isProjectCompleted } = useProgress();
 
   const pathData = careerPaths[pathId] ?? careerPaths.backend;
   const topicData = pathData.roadmap.find((t) => t.id === topicId);
@@ -111,10 +114,19 @@ export default function ProjectScreen() {
 
         {/* ── CTA ──────────────────────────────────────*/}
         <Pressable
-          style={({ pressed }) => [styles.ctaBtn, pressed && { opacity: 0.85 }]}
-          onPress={() => router.back()}
+          style={({ pressed }) => [
+            styles.ctaBtn,
+            isProjectCompleted(projectData.id) && { backgroundColor: Colors.success },
+            pressed && { opacity: 0.85 }
+          ]}
+          onPress={async () => {
+            await completeProject(projectData.id);
+            router.back();
+          }}
         >
-          <Text style={styles.ctaBtnText}>Mark Complete</Text>
+          <Text style={styles.ctaBtnText}>
+            {isProjectCompleted(projectData.id) ? "Completed" : "Mark Complete"}
+          </Text>
           <Text style={styles.ctaBtnArrow}>✓</Text>
         </Pressable>
       </ScrollView>

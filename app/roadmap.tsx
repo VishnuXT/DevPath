@@ -4,12 +4,15 @@ import {
   StyleSheet,
   ScrollView,
   SafeAreaView,
+  Pressable,
+  Alert,
 } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { careerPaths } from "../data";
 import RoadmapItem from "../components/RoadmapItem";
 import ProgressBar from "../components/ProgressBar";
 import AppHeader from "../components/AppHeader";
+import { useProgress } from "../context/ProgressContext";
 import {
   Colors,
   FontSize,
@@ -24,10 +27,11 @@ export default function RoadmapScreen() {
   const { path: pathId = "backend" } = useLocalSearchParams<{ path: string }>();
   const data = careerPaths[pathId] ?? careerPaths.backend;
 
-  // Static mock: 1 topic completed (Phase 4 will wire AsyncStorage)
-  const completedCount = 1;
+  const { getCompletedCount, getPathProgress, resetPathProgress } = useProgress();
+
+  const completedCount = getCompletedCount(pathId);
   const totalCount = data.roadmap.length;
-  const progressPercent = Math.round((completedCount / totalCount) * 100);
+  const progressPercent = getPathProgress(pathId);
 
   function getState(index: number): "completed" | "active" | "locked" {
     if (index < completedCount) return "completed";
@@ -96,6 +100,29 @@ export default function RoadmapScreen() {
             />
           ))}
         </View>
+
+        {/* ── Restart Course ────────────────────────── */}
+        {completedCount > 0 && (
+          <Pressable
+            style={({ pressed }) => [styles.resetBtn, pressed && styles.resetBtnPressed]}
+            onPress={() =>
+              Alert.alert(
+                "Restart Course",
+                `Are you sure you want to restart the ${data.title} course? All your progress will be lost.`,
+                [
+                  { text: "Cancel", style: "cancel" },
+                  {
+                    text: "Restart",
+                    style: "destructive",
+                    onPress: () => resetPathProgress(pathId),
+                  },
+                ]
+              )
+            }
+          >
+            <Text style={styles.resetBtnText}>🔄 Restart Course</Text>
+          </Pressable>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -192,5 +219,25 @@ const styles = StyleSheet.create({
   // Timeline container
   timeline: {
     paddingLeft: Spacing.xs,
+  },
+
+  // Restart button
+  resetBtn: {
+    marginTop: Spacing.xl,
+    marginBottom: Spacing.md,
+    borderWidth: 1.5,
+    borderColor: Colors.error,
+    borderRadius: Radius.md,
+    paddingVertical: Spacing.md,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  resetBtnPressed: {
+    backgroundColor: Colors.errorBg,
+  },
+  resetBtnText: {
+    fontSize: FontSize.body,
+    fontWeight: FontWeight.bold,
+    color: Colors.errorText,
   },
 });

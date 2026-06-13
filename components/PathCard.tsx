@@ -13,6 +13,7 @@ interface PathCardProps {
   title: string;
   description: string;
   topicCount: number;
+  progress?: number;
   onPress: () => void;
 }
 
@@ -21,6 +22,7 @@ export default function PathCard({
   title,
   description,
   topicCount,
+  progress = 0,
   onPress,
 }: PathCardProps) {
   return (
@@ -45,6 +47,13 @@ export default function PathCard({
           <View style={styles.topicBadge}>
             <Text style={styles.topicBadgeText}>{topicCount} topics</Text>
           </View>
+          {progress > 0 && (
+            <View style={[styles.topicBadge, styles.progressBadge]}>
+              <Text style={[styles.topicBadgeText, styles.progressBadgeText]}>
+                {progress}% completed
+              </Text>
+            </View>
+          )}
         </View>
       </View>
 
@@ -122,5 +131,13 @@ const styles = StyleSheet.create({
     color: Colors.textMuted,
     fontWeight: FontWeight.regular,
     marginLeft: Spacing.sm,
+  },
+  progressBadge: {
+    backgroundColor: Colors.successBg,
+    borderColor: Colors.success + "20",
+  },
+  progressBadgeText: {
+    color: Colors.success,
+    fontWeight: FontWeight.bold,
   },
 });

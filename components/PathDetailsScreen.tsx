@@ -5,11 +5,13 @@ import {
   StyleSheet,
   Pressable,
   SafeAreaView,
+  Alert,
 } from "react-native";
 import { router } from "expo-router";
 import { CareerPath } from "../data/types";
 import ProgressBar from "./ProgressBar";
 import AppHeader from "./AppHeader";
+import { useProgress } from "../context/ProgressContext";
 import {
   Colors,
   FontSize,
@@ -17,7 +19,6 @@ import {
   Spacing,
   Radius,
   Elevation,
-  LabelChip,
 } from "../constants/theme";
 
 interface PathDetailsScreenProps {
@@ -31,6 +32,7 @@ export default function PathDetailsScreen({
   pathId,
   progress = 0,
 }: PathDetailsScreenProps) {
+  const { resetPathProgress } = useProgress();
   const completedCount = Math.round((progress / 100) * data.roadmap.length);
 
   return (
@@ -108,7 +110,7 @@ export default function PathDetailsScreen({
 
         {/* ── Skills ───────────────────────────────── */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Skills You'll Gain</Text>
+          <Text style={styles.sectionTitle}>{"Skills You'll Gain"}</Text>
           <View style={styles.card}>
             {data.skills.map((skill, i) => (
               <View key={i} style={styles.skillRow}>
@@ -163,6 +165,28 @@ export default function PathDetailsScreen({
           <Text style={styles.ctaBtnText}>Open Full Roadmap</Text>
           <Text style={styles.ctaBtnArrow}>→</Text>
         </Pressable>
+
+        {progress > 0 && (
+          <Pressable
+            style={({ pressed }) => [styles.resetBtn, pressed && styles.resetBtnPressed]}
+            onPress={() => {
+              Alert.alert(
+                "Reset Path Progress",
+                `Are you sure you want to restart the ${data.title} course? All completed lessons and projects for this path will be reset.`,
+                [
+                  { text: "Cancel", style: "cancel" },
+                  {
+                    text: "Restart Course",
+                    style: "destructive",
+                    onPress: () => resetPathProgress(pathId),
+                  },
+                ]
+              );
+            }}
+          >
+            <Text style={styles.resetBtnText}>Restart Course 🔄</Text>
+          </Pressable>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -410,5 +434,22 @@ const styles = StyleSheet.create({
     fontSize: FontSize.body,
     fontWeight: FontWeight.bold,
     color: Colors.butter,
+  },
+  resetBtn: {
+    marginTop: Spacing.md,
+    borderWidth: 1.5,
+    borderColor: Colors.error,
+    borderRadius: Radius.md,
+    paddingVertical: Spacing.md,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  resetBtnPressed: {
+    backgroundColor: Colors.errorBg,
+  },
+  resetBtnText: {
+    fontSize: FontSize.body,
+    fontWeight: FontWeight.bold,
+    color: Colors.errorText,
   },
 });

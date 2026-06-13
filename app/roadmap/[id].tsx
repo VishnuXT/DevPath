@@ -9,6 +9,7 @@ import {
 import { router, useLocalSearchParams } from "expo-router";
 import { careerPaths } from "../../data";
 import AppHeader from "../../components/AppHeader";
+import { useProgress } from "../../context/ProgressContext";
 import {
   Colors,
   FontSize,
@@ -22,6 +23,8 @@ import {
 export default function RoadmapItemDetailScreen() {
   const { id: topicId, path: pathId = "backend" } =
     useLocalSearchParams<{ id: string; path: string }>();
+
+  const { isLessonCompleted, isProjectCompleted } = useProgress();
 
   const pathData = careerPaths[pathId] ?? careerPaths.backend;
   const topicData = pathData.roadmap.find((item) => item.id === topicId);
@@ -75,7 +78,7 @@ export default function RoadmapItemDetailScreen() {
         {/* ── Lessons ──────────────────────────────── */}
         <View style={styles.section}>
           <Text style={styles.sectionLabel}>LESSONS</Text>
-          <Text style={styles.sectionTitle}>What you'll learn</Text>
+          <Text style={styles.sectionTitle}>{"What you'll learn"}</Text>
 
           <View style={styles.lessonsList}>
             {topicData.lessons.map((lesson, idx) => (
@@ -106,8 +109,10 @@ export default function RoadmapItemDetailScreen() {
                 </View>
 
                 {/* Status chip */}
-                <View style={styles.startChip}>
-                  <Text style={styles.startChipText}>Start</Text>
+                <View style={[styles.startChip, isLessonCompleted(lesson.id) && styles.completedChip]}>
+                  <Text style={[styles.startChipText, isLessonCompleted(lesson.id) && styles.completedChipText]}>
+                    {isLessonCompleted(lesson.id) ? "Completed ✓" : "Start"}
+                  </Text>
                 </View>
               </Pressable>
             ))}
@@ -141,8 +146,10 @@ export default function RoadmapItemDetailScreen() {
                   </View>
                   <View style={styles.projectMeta}>
                     <Text style={styles.projectTitle}>{project.title}</Text>
-                    <View style={styles.projectBadge}>
-                      <Text style={styles.projectBadgeText}>Practice Project</Text>
+                    <View style={[styles.projectBadge, isProjectCompleted(project.id) && styles.completedChip]}>
+                      <Text style={[styles.projectBadgeText, isProjectCompleted(project.id) && styles.completedChipText]}>
+                        {isProjectCompleted(project.id) ? "Completed ✓" : "Practice Project"}
+                      </Text>
                     </View>
                   </View>
                 </View>
@@ -164,8 +171,10 @@ export default function RoadmapItemDetailScreen() {
                   )}
                 </View>
 
-                <View style={styles.viewGuideBtn}>
-                  <Text style={styles.viewGuideBtnText}>View Project Guide →</Text>
+                <View style={[styles.viewGuideBtn, isProjectCompleted(project.id) && { backgroundColor: Colors.success }]}>
+                  <Text style={styles.viewGuideBtnText}>
+                    {isProjectCompleted(project.id) ? "Completed ✓ Review Guide" : "View Project Guide →"}
+                  </Text>
                 </View>
               </Pressable>
             ))}
@@ -414,5 +423,12 @@ const styles = StyleSheet.create({
     fontSize: FontSize.body,
     fontWeight: FontWeight.bold,
     color: Colors.textInverse,
+  },
+  completedChip: {
+    backgroundColor: Colors.successBg,
+    borderColor: Colors.success + "30",
+  },
+  completedChipText: {
+    color: Colors.success,
   },
 });

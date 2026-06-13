@@ -10,6 +10,7 @@ import { router } from "expo-router";
 import PathCard from "../components/PathCard";
 import ProgressBar from "../components/ProgressBar";
 import { careerPaths } from "../data";
+import { useProgress } from "../context/ProgressContext";
 import {
   Colors,
   FontSize,
@@ -42,6 +43,9 @@ const PATHS = [
 ];
 
 export default function HomeScreen() {
+  const { getOverallProgress, getPathProgress } = useProgress();
+  const overallProgress = getOverallProgress();
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" backgroundColor={Colors.background} />
@@ -76,10 +80,10 @@ export default function HomeScreen() {
             <View style={styles.heroBannerProgress}>
               <View style={styles.heroBannerProgressRow}>
                 <Text style={styles.heroBannerProgressLabel}>Overall Progress</Text>
-                <Text style={styles.heroBannerProgressPct}>0%</Text>
+                <Text style={styles.heroBannerProgressPct}>{overallProgress}%</Text>
               </View>
               <ProgressBar
-                progress={0}
+                progress={overallProgress}
                 color={Colors.butter}
                 backgroundColor="rgba(255,255,255,0.2)"
                 height={6}
@@ -122,6 +126,7 @@ export default function HomeScreen() {
               title={pathData.title}
               description={p.description}
               topicCount={pathData.roadmap.length}
+              progress={getPathProgress(p.id)}
               onPress={() => router.push(p.route)}
             />
           );

@@ -10,6 +10,7 @@ import {
 import { router, useLocalSearchParams } from "expo-router";
 import { careerPaths } from "../../data";
 import AppHeader from "../../components/AppHeader";
+import { useProgress } from "../../context/ProgressContext";
 import {
   Colors,
   FontSize,
@@ -26,6 +27,8 @@ export default function LessonScreen() {
     topicId,
     path: pathId = "backend",
   } = useLocalSearchParams<{ id: string; topicId: string; path: string }>();
+
+  const { completeLesson } = useProgress();
 
   const pathData = careerPaths[pathId] ?? careerPaths.backend;
   const topicData = pathData.roadmap.find((t) => t.id === topicId);
@@ -50,11 +53,19 @@ export default function LessonScreen() {
   }
 
   const quiz = lessonData.quiz;
-  const isCorrect = selectedIdx === quiz.answerIndex;
+  const isCorrect = submitted && selectedIdx === quiz.answerIndex;
 
   function handleSubmit() {
     if (selectedIdx === null) return;
     setSubmitted(true);
+    if (selectedIdx === quiz.answerIndex) {
+      completeLesson(lessonId);
+    }
+  }
+
+  function handleTryAgain() {
+    setSelectedIdx(null);
+    setSubmitted(false);
   }
 
   function getOptionStyle(idx: number) {
@@ -173,16 +184,28 @@ export default function LessonScreen() {
                 </Text>
               </View>
 
-              <Pressable
-                style={({ pressed }) => [
-                  styles.continueBtn,
-                  pressed && { opacity: 0.85 },
-                ]}
-                onPress={() => router.back()}
-              >
-                <Text style={styles.continueBtnText}>Continue Roadmap</Text>
-                <Text style={styles.continueBtnArrow}>→</Text>
-              </Pressable>
+              {isCorrect ? (
+                <Pressable
+                  style={({ pressed }) => [
+                    styles.continueBtn,
+                    pressed && { opacity: 0.85 },
+                  ]}
+                  onPress={() => router.back()}
+                >
+                  <Text style={styles.continueBtnText}>Continue Roadmap</Text>
+                  <Text style={styles.continueBtnArrow}>→</Text>
+                </Pressable>
+              ) : (
+                <Pressable
+                  style={({ pressed }) => [
+                    styles.tryAgainBtn,
+                    pressed && { opacity: 0.85 },
+                  ]}
+                  onPress={handleTryAgain}
+                >
+                  <Text style={styles.tryAgainBtnText}>Try Again</Text>
+                </Pressable>
+              )}
             </View>
           )}
         </View>
@@ -456,5 +479,17 @@ const styles = StyleSheet.create({
     fontSize: FontSize.body,
     color: Colors.butter,
     fontWeight: FontWeight.bold,
+  },
+  tryAgainBtn: {
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: Colors.error,
+    borderRadius: Radius.md,
+    paddingVertical: Spacing.md,
+  },
+  tryAgainBtnText: {
+    fontSize: FontSize.body,
+    fontWeight: FontWeight.bold,
+    color: Colors.textInverse,
   },
 });
