@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import QuizScreen from "../../../components/QuizScreen";
 import { careerPaths } from "../../../data";
 import { buildModuleQuizBank } from "../../../quiz/moduleQuiz";
@@ -25,6 +25,9 @@ export default function ModuleQuizRoute() {
       questionBank={questionBank}
       onComplete={() => {
         // Result is shown by the reusable screen.
+      }}
+      onExit={() => {
+        router.back();
       }}
     />
   );

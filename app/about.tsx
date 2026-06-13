@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, View, Pressable, StatusBar } from "react-native";
+import { ScrollView, StyleSheet, Text, View, Pressable, StatusBar, Linking } from "react-native";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AppHeader from "../components/AppHeader";
@@ -139,6 +139,26 @@ export default function AboutScreen() {
             <Text style={styles.visionLine}>Learn.</Text>
             <Text style={styles.visionLine}>Build.</Text>
             <Text style={styles.visionLine}>Grow.</Text>
+          </View>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionLabel}>COMMUNITY</Text>
+          <Text style={styles.sectionTitle}>Join the Discussion</Text>
+          <View style={styles.card}>
+            <Text style={styles.cardText}>
+              Need help with a lesson, want to showcase a project, or chat with other beginners? Join our official community!
+            </Text>
+            <Pressable
+              style={({ pressed }) => [styles.discordLinkBtn, pressed && styles.discordLinkBtnPressed]}
+              onPress={() => {
+                Linking.openURL("https://discord.gg/FHwREGyN").catch((err) =>
+                  console.warn("Failed to open Discord link", err)
+                );
+              }}
+            >
+              <Text style={styles.discordLinkBtnText}>Join our Discord Server 💬</Text>
+            </Pressable>
           </View>
         </View>
 
@@ -346,5 +366,23 @@ const styles = StyleSheet.create({
     fontSize: FontSize.caption,
     fontWeight: FontWeight.bold,
     color: Colors.primary,
+  },
+  discordLinkBtn: {
+    backgroundColor: "#5865F2",
+    borderRadius: Radius.pill,
+    paddingVertical: Spacing.md,
+    paddingHorizontal: Spacing.xl,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: Spacing.sm,
+    ...Elevation.sm,
+  },
+  discordLinkBtnPressed: {
+    backgroundColor: "#4752C4",
+  },
+  discordLinkBtnText: {
+    fontSize: FontSize.body,
+    fontWeight: FontWeight.bold,
+    color: "#FFFFFF",
   },
 });

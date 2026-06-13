@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -6,9 +7,13 @@ import {
   StatusBar,
   ActivityIndicator,
   Pressable,
+  Modal,
+  Linking,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import PathCard from "../components/PathCard";
 import ProgressBar from "../components/ProgressBar";
 import { careerPaths } from "../data";
@@ -22,6 +27,8 @@ import {
   Elevation,
   LabelChip,
 } from "../constants/theme";
+
+const INTRO_SEEN_KEY = "devroot_intro_seen";
 
 const PATHS = [
   {
@@ -47,20 +54,127 @@ const PATHS = [
 export default function HomeScreen() {
   const { getOverallProgress, getPathProgress, loading } = useProgress();
   const overallProgress = getOverallProgress();
+  const [showIntro, setShowIntro] = useState(false);
+  const [showReminder, setShowReminder] = useState(false);
+  const scrollRef = useRef<ScrollView>(null);
+
+  useEffect(() => {
+    async function checkIntro() {
+      try {
+        const seen = await AsyncStorage.getItem(INTRO_SEEN_KEY);
+        if (!seen) {
+          setShowIntro(true);
+        } else {
+          setShowReminder(true);
+        }
+      } catch (e) {
+        setShowIntro(true);
+      }
+    }
+    checkIntro();
+  }, []);
+
+  async function dismissIntro() {
+    setShowIntro(false);
+    try {
+      await AsyncStorage.setItem(INTRO_SEEN_KEY, "true");
+    } catch (e) {
+      console.warn("Error saving intro seen state", e);
+    }
+  }
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      {/* First-time Onboarding Modal */}
+      <Modal
+        visible={showIntro}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowIntro(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalEmoji}>🌱</Text>
+            <Text style={styles.modalTitle}>Before You Start...</Text>
+
+            <View style={styles.modalCard}>
+              <View style={styles.modalItem}>
+                <Text style={styles.modalItemTitle}>💡 Not Just Theory</Text>
+                <Text style={styles.modalItemText}>
+                  We guide you through the basics, but view this app as your mentor and helper. To get the best results, use external modules, packages, and tutorials to expand your learning!
+                </Text>
+              </View>
+
+              <View style={styles.modalItem}>
+                <Text style={styles.modalItemTitle}>💻 Practice on Code</Text>
+                <Text style={styles.modalItemText}>
+                  A pen and paper won't write programs. Always use your laptop or development machine to practice hands-on while going through the lessons.
+                </Text>
+              </View>
+            </View>
+
+            <Pressable
+              style={({ pressed }) => [
+                styles.modalBtn,
+                pressed && styles.modalBtnPressed
+              ]}
+              onPress={dismissIntro}
+            >
+              <Text style={styles.modalBtnText}>Got it, let's code! 🚀</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Subsequent Laptop Reminder Modal */}
+      <Modal
+        visible={showReminder}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowReminder(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.reminderContent}>
+            <Text style={styles.reminderEmoji}>💻</Text>
+            <Text style={styles.reminderTitle}>Ready to Code?</Text>
+            <Text style={styles.reminderText}>
+              Make sure your laptop or development machine is set up next to you. Practice is the key to mastering code!
+            </Text>
+
+            <Pressable
+              style={({ pressed }) => [
+                styles.modalBtn,
+                pressed && styles.modalBtnPressed
+              ]}
+              onPress={() => setShowReminder(false)}
+            >
+              <Text style={styles.modalBtnText}>Laptops Ready! 🚀</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+
       <StatusBar barStyle="dark-content" backgroundColor={Colors.background} />
 
-      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+      <ScrollView ref={scrollRef} contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <View style={styles.topBar}>
           <View>
             <Text style={styles.greeting}>Good to see you 👋</Text>
             <Text style={styles.topBarTitle}>DevRoot</Text>
           </View>
-          <View style={styles.avatarPlaceholder}>
-            <Text style={styles.avatarText}>D</Text>
-          </View>
+          <Pressable
+            style={({ pressed }) => [
+              styles.avatarPlaceholder,
+              styles.discordAvatar,
+              pressed && styles.discordAvatarPressed,
+            ]}
+            onPress={() => {
+              scrollRef.current?.scrollToEnd({ animated: true });
+            }}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          >
+            <Ionicons name="logo-discord" size={22} color="#FFFFFF" />
+          </Pressable>
         </View>
 
         <View style={styles.heroBanner}>
@@ -143,13 +257,13 @@ export default function HomeScreen() {
           );
         })}
 
-        <Pressable
+        {/* <Pressable
           style={({ pressed }) => [styles.quizBtn, pressed && styles.quizBtnPressed]}
           onPress={() => router.push("/quiz")}
         >
           <Text style={styles.quizBtnLabel}>Open Quiz Demo</Text>
           <Text style={styles.quizBtnText}>Take the reusable quiz screen</Text>
-        </Pressable>
+        </Pressable> */}
 
         <Pressable
           style={({ pressed }) => [styles.aboutBtn, pressed && styles.aboutBtnPressed]}
@@ -160,6 +274,21 @@ export default function HomeScreen() {
             Learn more about DevRoot, our mission, and the team behind the platform.
           </Text>
           <Text style={styles.aboutBtnCta}>View About Page →</Text>
+        </Pressable>
+
+        <Pressable
+          style={({ pressed }) => [styles.discordBtn, pressed && styles.discordBtnPressed]}
+          onPress={() => {
+            Linking.openURL("https://discord.gg/FHwREGyN").catch((err) =>
+              console.warn("Failed to open Discord link", err)
+            );
+          }}
+        >
+          <Text style={styles.discordBtnLabel}>COMMUNITY</Text>
+          <Text style={styles.discordBtnText}>
+            Join our Discord server to chat with other learners, ask questions, and share projects!
+          </Text>
+          <Text style={styles.discordBtnCta}>Join Discord Server 💬 →</Text>
         </Pressable>
       </ScrollView>
     </SafeAreaView>
@@ -197,9 +326,18 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: Colors.butter,
+    backgroundColor: Colors.primaryLight,
     alignItems: "center",
     justifyContent: "center",
+  },
+  discordAvatar: {
+    backgroundColor: "#5865F2",
+    borderWidth: 1,
+    borderColor: "#4752C4",
+    ...Elevation.sm,
+  },
+  discordAvatarPressed: {
+    backgroundColor: "#4752C4",
   },
   avatarText: {
     fontSize: FontSize.body,
@@ -370,5 +508,134 @@ const styles = StyleSheet.create({
     fontSize: FontSize.bodySmall,
     fontWeight: FontWeight.bold,
     color: Colors.primary,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: Spacing.xl,
+  },
+  modalContent: {
+    backgroundColor: Colors.surface,
+    borderRadius: Radius.xxl,
+    padding: Spacing.xl,
+    width: "100%",
+    maxWidth: 340,
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: Colors.border,
+    ...Elevation.lg,
+  },
+  modalEmoji: {
+    fontSize: 48,
+    marginBottom: Spacing.sm,
+  },
+  modalTitle: {
+    fontSize: FontSize.title2,
+    fontWeight: FontWeight.black,
+    color: Colors.primary,
+    marginBottom: Spacing.lg,
+    textAlign: "center",
+  },
+  modalCard: {
+    gap: Spacing.md,
+    marginBottom: Spacing.xl,
+    width: "100%",
+  },
+  modalItem: {
+    backgroundColor: Colors.surfaceSecondary,
+    borderRadius: Radius.lg,
+    padding: Spacing.md,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  modalItemTitle: {
+    fontSize: FontSize.body,
+    fontWeight: FontWeight.bold,
+    color: Colors.textPrimary,
+    marginBottom: Spacing.xs,
+  },
+  modalItemText: {
+    fontSize: FontSize.bodySmall,
+    color: Colors.textSecondary,
+    lineHeight: 20,
+  },
+  modalBtn: {
+    backgroundColor: Colors.primary,
+    borderRadius: Radius.pill,
+    paddingVertical: Spacing.md,
+    paddingHorizontal: Spacing.xl,
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    ...Elevation.md,
+  },
+  modalBtnPressed: {
+    backgroundColor: Colors.primaryDark,
+  },
+  modalBtnText: {
+    fontSize: FontSize.body,
+    fontWeight: FontWeight.bold,
+    color: Colors.textInverse,
+  },
+  reminderContent: {
+    backgroundColor: Colors.surface,
+    borderRadius: Radius.xxl,
+    padding: Spacing.xl,
+    width: "100%",
+    maxWidth: 320,
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: Colors.border,
+    ...Elevation.lg,
+  },
+  reminderEmoji: {
+    fontSize: 44,
+    marginBottom: Spacing.sm,
+  },
+  reminderTitle: {
+    fontSize: FontSize.title3,
+    fontWeight: FontWeight.black,
+    color: Colors.primary,
+    marginBottom: Spacing.sm,
+    textAlign: "center",
+  },
+  reminderText: {
+    fontSize: FontSize.bodySmall,
+    color: Colors.textSecondary,
+    textAlign: "center",
+    lineHeight: 20,
+    marginBottom: Spacing.lg,
+  },
+  discordBtn: {
+    marginTop: Spacing.lg,
+    backgroundColor: "#5865F2",
+    borderRadius: Radius.xxl,
+    padding: Spacing.xl,
+    borderWidth: 1,
+    borderColor: "#4752C4",
+    ...Elevation.md,
+  },
+  discordBtnPressed: {
+    backgroundColor: "#4752C4",
+  },
+  discordBtnLabel: {
+    ...LabelChip,
+    color: "#FFFFFF",
+    opacity: 0.9,
+    marginBottom: Spacing.xs,
+  },
+  discordBtnText: {
+    fontSize: FontSize.body,
+    lineHeight: 22,
+    color: "#FFFFFF",
+    marginBottom: Spacing.sm,
+    fontWeight: FontWeight.medium,
+  },
+  discordBtnCta: {
+    fontSize: FontSize.bodySmall,
+    fontWeight: FontWeight.bold,
+    color: "#FFFFFF",
   },
 });

@@ -14,6 +14,43 @@ import {
   Elevation,
   LabelChip,
 } from "../../constants/theme";
+function HighlightCode({ code }: { code: string }) {
+  const tokenRegex = /(<!--[\s\S]*?-->|\/\*[\s\S]*?\*\/|\/\/.*|#.*|"(?:\\.|[^\\"])*"|'(?:\\.|[^\\'])*'|`(?:\\.|[^\\`])*`|\b(?:const|let|var|function|return|import|from|def|class|if|else|await|async|for|while|try|except|in|as|is|and|or|not)\b|\b[a-zA-Z_][a-zA-Z0-9_]*\b(?=\s*\()|<\/?[a-zA-Z0-9_:-]+>?|<\/?>|\b\d+\b)/g;
+
+  const parts = code.split(tokenRegex);
+
+  return (
+    <Text style={styles.codeLineText}>
+      {parts.map((part, index) => {
+        if (!part) return null;
+
+        let color = "#ABB2BF"; // default font color (off-white)
+        let fontWeight: "400" | "bold" = "400";
+
+        if (part.startsWith("//") || part.startsWith("/*") || part.startsWith("#") || part.startsWith("<!--")) {
+          color = "#5C6370"; // comment (slate gray)
+        } else if (part.startsWith('"') || part.startsWith("'") || part.startsWith("`")) {
+          color = "#98C379"; // string (emerald/sage green)
+        } else if (part.startsWith("<") || part.endsWith(">")) {
+          color = "#E06C75"; // tag/HTML element (coral pink)
+        } else if (/^(?:const|let|var|function|return|import|from|def|class|if|else|await|async|for|while|try|except|in|as|is|and|or|not)$/.test(part)) {
+          color = "#C678DD"; // keyword (purple)
+          fontWeight = "bold";
+        } else if (/^\d+$/.test(part)) {
+          color = "#D19A66"; // number (orange)
+        } else if (/\b[a-zA-Z_][a-zA-Z0-9_]*\b(?=\s*\()/.test(part)) {
+          color = "#61AFEF"; // function (sky blue)
+        }
+
+        return (
+          <Text key={index} style={{ color, fontWeight }}>
+            {part}
+          </Text>
+        );
+      })}
+    </Text>
+  );
+}
 
 export default function LessonScreen() {
   const {
@@ -94,14 +131,24 @@ export default function LessonScreen() {
         {lessonData.codeExample && (
           <View style={styles.codeSection}>
             <View style={styles.codeHeader}>
-              <View style={styles.codeDot} />
-              <View style={[styles.codeDot, { backgroundColor: Colors.primaryLight }]} />
-              <View style={[styles.codeDot, { backgroundColor: Colors.success }]} />
-              <Text style={styles.codeHeaderLabel}>Example</Text>
+              <View style={[styles.codeDot, { backgroundColor: "#FF5F56" }]} />
+              <View style={[styles.codeDot, { backgroundColor: "#FFBD2E" }]} />
+              <View style={[styles.codeDot, { backgroundColor: "#27C93F" }]} />
+              <Text style={styles.codeHeaderLabel}>example.code</Text>
             </View>
-            <View style={styles.codeBlock}>
-              <Text style={styles.codeText}>{lessonData.codeExample}</Text>
-            </View>
+            <ScrollView style={styles.codeBlock} horizontal showsHorizontalScrollIndicator={false}>
+              <View style={{ minWidth: "100%" }}>
+                {lessonData.codeExample
+                  .trim()
+                  .split("\n")
+                  .map((line, idx) => (
+                    <View key={idx} style={styles.codeLineRow}>
+                      <Text style={styles.lineNumber}>{idx + 1}</Text>
+                      <HighlightCode code={line} />
+                    </View>
+                  ))}
+              </View>
+            </ScrollView>
           </View>
         )}
 
@@ -256,44 +303,57 @@ const styles = StyleSheet.create({
   },
   codeSection: {
     marginBottom: Spacing.xl,
-    borderRadius: Radius.xxl,
+    borderRadius: Radius.xl,
     overflow: "hidden",
+    borderWidth: 1,
+    borderColor: "#1E293B",
     ...Elevation.sm,
   },
   codeHeader: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: Colors.surfaceSecondary,
+    backgroundColor: "#0B0F17",
     paddingVertical: Spacing.sm,
     paddingHorizontal: Spacing.md,
     gap: Spacing.xs,
     borderBottomWidth: 1,
-    borderColor: Colors.border,
+    borderColor: "#1E293B",
   },
   codeDot: {
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: Colors.error,
   },
   codeHeaderLabel: {
-    fontSize: FontSize.caption,
-    fontWeight: FontWeight.semiBold,
-    color: Colors.textSecondary,
+    fontFamily: "monospace",
+    fontSize: 12,
+    fontWeight: FontWeight.medium,
+    color: "#64748B",
     marginLeft: Spacing.sm,
-    letterSpacing: 0.5,
   },
   codeBlock: {
-    backgroundColor: Colors.surface,
-    padding: Spacing.xl,
-    borderWidth: 1,
-    borderColor: Colors.border,
+    backgroundColor: "#0E131F",
+    paddingVertical: Spacing.md,
+    paddingHorizontal: Spacing.lg,
   },
-  codeText: {
+  codeLineRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    marginBottom: 2,
+  },
+  lineNumber: {
     fontFamily: "monospace",
-    fontSize: 14,
-    color: Colors.primary,
-    lineHeight: 22,
+    fontSize: 13,
+    color: "#475569",
+    width: 24,
+    marginRight: 12,
+    textAlign: "right",
+  },
+  codeLineText: {
+    fontFamily: "monospace",
+    fontSize: 13,
+    lineHeight: 18,
+    color: "#ABB2BF",
   },
   quizSection: {
     backgroundColor: Colors.surface,

@@ -32,8 +32,8 @@ export default function PathDetailsScreen({
   pathId,
   progress = 0,
 }: PathDetailsScreenProps) {
-  const { resetPathProgress } = useProgress();
-  const completedCount = Math.round((progress / 100) * data.roadmap.length);
+  const { resetPathProgress, getCompletedCount } = useProgress();
+  const completedCount = getCompletedCount(pathId);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -126,14 +126,29 @@ export default function PathDetailsScreen({
             <Text style={styles.sectionTitle}>Roadmap Preview</Text>
           </View>
           <View style={styles.card}>
-            {data.roadmap.map((item, i) => (
-              <View key={item.id} style={styles.previewRow}>
-                <View style={[styles.previewDot, i === 0 && styles.previewDotActive]} />
-                <Text style={[styles.previewText, i === 0 && styles.previewTextActive]}>
-                  {i + 1}. {item.title}
-                </Text>
-              </View>
-            ))}
+            {data.roadmap.map((item, i) => {
+              const isCompleted = i < completedCount;
+              const isActive = i === completedCount;
+              return (
+                <View key={item.id} style={styles.previewRow}>
+                  <View
+                    style={[
+                      styles.previewDot,
+                      isCompleted && styles.previewDotCompleted,
+                      isActive && styles.previewDotActive,
+                    ]}
+                  />
+                  <Text
+                    style={[
+                      styles.previewText,
+                      (isCompleted || isActive) && styles.previewTextActive,
+                    ]}
+                  >
+                    {i + 1}. {item.title}
+                  </Text>
+                </View>
+              );
+            })}
           </View>
         </View>
 
@@ -372,6 +387,9 @@ const styles = StyleSheet.create({
   },
   previewDotActive: {
     backgroundColor: Colors.primary,
+  },
+  previewDotCompleted: {
+    backgroundColor: Colors.success,
   },
   previewText: {
     fontSize: FontSize.bodySmall,

@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import QuizScreen from "../components/QuizScreen";
 import { QuizQuestion } from "../quiz/types";
 
@@ -84,7 +85,7 @@ export default function QuizRoute() {
         // The reusable screen already shows the result state.
       }}
       onExit={() => {
-        // The built-in back button is enough for this demo route.
+        router.back();
       }}
     />
   );
