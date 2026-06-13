@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: Colors.surface,
+    backgroundColor: Colors.background,
     paddingHorizontal: Spacing.xl,
     paddingVertical: Spacing.md,
     borderBottomWidth: 1,
@@ -57,10 +57,12 @@ const styles = StyleSheet.create({
   backBtn: {
     width: 36,
     height: 36,
-    borderRadius: 10,
+    borderRadius: 12,
     backgroundColor: Colors.surfaceSecondary,
     alignItems: "center",
     justifyContent: "center",
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   backBtnPressed: {
     backgroundColor: Colors.surfaceTertiary,
@@ -74,7 +76,7 @@ const styles = StyleSheet.create({
   title: {
     flex: 1,
     textAlign: "center",
-    fontSize: FontSize.body,
+    fontSize: FontSize.title3,
     fontWeight: FontWeight.bold,
     color: Colors.textPrimary,
     letterSpacing: 0.2,

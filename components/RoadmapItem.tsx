@@ -28,23 +28,20 @@ export default function RoadmapItem({
   onPress,
 }: RoadmapItemProps) {
   const nodeStyle = nodeStyles[state];
+  const statusText =
+    state === "completed" ? "Completed" : state === "active" ? "Up next" : "Locked";
 
   return (
     <View style={styles.row}>
-      {/* ── Timeline column ── */}
       <View style={styles.timelineCol}>
-        {/* Node */}
         <View style={[styles.node, nodeStyle.node]}>
           {state === "completed" ? (
             <Text style={styles.checkmark}>✓</Text>
           ) : (
-            <Text style={[styles.nodeNumber, nodeStyle.nodeText]}>
-              {number}
-            </Text>
+            <Text style={[styles.nodeNumber, nodeStyle.nodeText]}>{number}</Text>
           )}
         </View>
 
-        {/* Connector line */}
         {!isLast && (
           <View
             style={[
@@ -55,7 +52,6 @@ export default function RoadmapItem({
         )}
       </View>
 
-      {/* ── Card ── */}
       <Pressable
         style={({ pressed }) => [
           styles.card,
@@ -66,15 +62,8 @@ export default function RoadmapItem({
         onPress={onPress}
         disabled={state === "locked"}
       >
-        {/* Status chip */}
         <View style={[styles.chip, nodeStyle.chip]}>
-          <Text style={[styles.chipText, nodeStyle.chipText]}>
-            {state === "completed"
-              ? "Completed"
-              : state === "active"
-              ? "Up Next"
-              : "Locked"}
-          </Text>
+          <Text style={[styles.chipText, nodeStyle.chipText]}>{statusText}</Text>
         </View>
 
         <Text style={[styles.cardTitle, state === "locked" && styles.lockedTitle]}>
@@ -89,15 +78,13 @@ export default function RoadmapItem({
 
         {state !== "locked" && (
           <Text style={[styles.cta, { color: Colors.primary }]}>
-            {state === "completed" ? "Review →" : "Start →"}
+            {state === "completed" ? "Review ->" : "Start ->"}
           </Text>
         )}
       </Pressable>
     </View>
   );
 }
-
-// ── Per-state style maps ──────────────────────────────────────────────────────
 
 const nodeStyles: Record<NodeState, any> = {
   completed: {
@@ -149,13 +136,13 @@ const styles = StyleSheet.create({
   },
   timelineCol: {
     alignItems: "center",
-    width: 44,
+    width: 48,
     paddingTop: 2,
   },
   node: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
     zIndex: 1,
@@ -172,7 +159,7 @@ const styles = StyleSheet.create({
   line: {
     width: 2,
     flex: 1,
-    marginTop: 2,
+    marginTop: 4,
     marginBottom: 2,
     borderRadius: 1,
   },
@@ -185,12 +172,12 @@ const styles = StyleSheet.create({
   card: {
     flex: 1,
     backgroundColor: Colors.surface,
-    borderRadius: Radius.lg,
+    borderRadius: Radius.xl,
     padding: Spacing.lg,
     marginBottom: Spacing.md,
     borderWidth: 1,
     borderColor: Colors.border,
-    ...Elevation.sm,
+    ...Elevation.md,
   },
   cardLast: {
     marginBottom: Spacing.xxxl,
@@ -200,7 +187,7 @@ const styles = StyleSheet.create({
   },
   chip: {
     alignSelf: "flex-start",
-    paddingVertical: 3,
+    paddingVertical: 4,
     paddingHorizontal: Spacing.sm,
     borderRadius: Radius.pill,
     marginBottom: Spacing.sm,
@@ -211,7 +198,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   cardTitle: {
-    fontSize: FontSize.body,
+    fontSize: FontSize.title3,
     fontWeight: FontWeight.bold,
     color: Colors.textPrimary,
     marginBottom: Spacing.xs,
@@ -222,7 +209,7 @@ const styles = StyleSheet.create({
   cardDesc: {
     fontSize: FontSize.bodySmall,
     color: Colors.textSecondary,
-    lineHeight: 20,
+    lineHeight: 21,
     marginBottom: Spacing.sm,
   },
   lockedDesc: {

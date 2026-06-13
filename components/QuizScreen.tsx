@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
   Animated,
-  SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -10,7 +9,8 @@ import {
   Pressable,
 } from "react-native";
 import { router } from "expo-router";
-import { Colors, FontSize, FontWeight, Radius, Spacing } from "../constants/theme";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Colors, FontSize, FontWeight, Radius, Spacing, Elevation } from "../constants/theme";
 import AppHeader from "./AppHeader";
 import QuestionCard from "./QuestionCard";
 import QuizProgressBar from "./QuizProgressBar";
@@ -53,7 +53,7 @@ export default function QuizScreen({
   const [locked, setLocked] = useState(false);
   const [result, setResult] = useState<QuizResult | null>(null);
   const [feedback, setFeedback] = useState<"correct" | "wrong" | null>(null);
-  const fadeAnim = useRef(new Animated.Value(1)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const totalQuestions = questionsPerAttempt;
@@ -68,6 +68,7 @@ export default function QuizScreen({
   }, []);
 
   useEffect(() => {
+    fadeAnim.setValue(0);
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 220,
@@ -150,7 +151,7 @@ export default function QuizScreen({
             </View>
 
             <Text style={styles.resultTitle}>
-              {result.passed ? "Nice work!" : "Try again"}
+              {result.passed ? "Nice work!" : "Keep going"}
             </Text>
             <Text style={styles.resultText}>
               You got {result.correctAnswers} out of {result.totalQuestions} correct.
@@ -277,9 +278,11 @@ const styles = StyleSheet.create({
   },
   hero: {
     backgroundColor: Colors.primary,
-    borderRadius: Radius.xl,
+    borderRadius: Radius.xxl,
     padding: Spacing.xl,
     marginBottom: Spacing.xl,
+    borderWidth: 1,
+    borderColor: Colors.primaryDark,
   },
   heroTop: {
     flexDirection: "row",
@@ -359,11 +362,12 @@ const styles = StyleSheet.create({
   },
   resultCard: {
     backgroundColor: Colors.surface,
-    borderRadius: Radius.xl,
+    borderRadius: Radius.xxl,
     padding: Spacing.xl,
     borderWidth: 1,
     borderColor: Colors.border,
     gap: Spacing.md,
+    ...Elevation.md,
   },
   resultBadge: {
     alignSelf: "flex-start",
@@ -415,7 +419,7 @@ const styles = StyleSheet.create({
   },
   primaryBtn: {
     backgroundColor: Colors.primary,
-    borderRadius: Radius.lg,
+    borderRadius: Radius.xl,
     paddingVertical: Spacing.md,
     alignItems: "center",
   },
@@ -426,7 +430,7 @@ const styles = StyleSheet.create({
   },
   secondaryBtn: {
     backgroundColor: Colors.butter,
-    borderRadius: Radius.lg,
+    borderRadius: Radius.xl,
     paddingVertical: Spacing.md,
     alignItems: "center",
   },

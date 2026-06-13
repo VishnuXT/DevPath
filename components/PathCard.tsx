@@ -25,40 +25,41 @@ export default function PathCard({
   progress = 0,
   onPress,
 }: PathCardProps) {
+  const ctaLabel = progress > 0 ? "Continue" : "Start learning";
+  const progressBadge = progress > 0 ? (
+    <View style={[styles.topicBadge, styles.progressBadge]}>
+      <Text style={[styles.topicBadgeText, styles.progressBadgeText]}>
+        {progress}% completed
+      </Text>
+    </View>
+  ) : null;
+
   return (
     <Pressable
       style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}
       onPress={onPress}
     >
-      {/* Icon Container */}
       <View style={styles.iconContainer}>
         <Text style={styles.emoji}>{emoji}</Text>
       </View>
 
-      {/* Text Content */}
       <View style={styles.textContent}>
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.description} numberOfLines={2}>
           {description}
         </Text>
 
-        {/* Meta Row */}
         <View style={styles.metaRow}>
           <View style={styles.topicBadge}>
             <Text style={styles.topicBadgeText}>{topicCount} topics</Text>
           </View>
-          {progress > 0 && (
-            <View style={[styles.topicBadge, styles.progressBadge]}>
-              <Text style={[styles.topicBadgeText, styles.progressBadgeText]}>
-                {progress}% completed
-              </Text>
-            </View>
-          )}
+          {progressBadge}
         </View>
+
+        <Text style={styles.cta}>{ctaLabel}</Text>
       </View>
 
-      {/* Chevron */}
-      <Text style={styles.chevron}>›</Text>
+      <Text style={styles.chevron}>Next</Text>
     </Pressable>
   );
 }
@@ -66,44 +67,44 @@ export default function PathCard({
 const styles = StyleSheet.create({
   card: {
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-start",
     backgroundColor: Colors.surface,
-    borderRadius: Radius.xl,
+    borderRadius: Radius.xxl,
     borderWidth: 1,
     borderColor: Colors.border,
     padding: Spacing.xl,
     marginBottom: Spacing.md,
-    ...Elevation.sm,
+    gap: Spacing.md,
+    ...Elevation.md,
   },
   cardPressed: {
     backgroundColor: Colors.surfaceSecondary,
-    transform: [{ scale: 0.99 }],
+    transform: [{ scale: 0.985 }],
   },
   iconContainer: {
-    width: 52,
-    height: 52,
-    borderRadius: Radius.md,
-    backgroundColor: Colors.surfaceSecondary,
+    width: 56,
+    height: 56,
+    borderRadius: Radius.lg,
+    backgroundColor: Colors.butter,
     alignItems: "center",
     justifyContent: "center",
-    marginRight: Spacing.lg,
     borderWidth: 1,
-    borderColor: Colors.borderLight,
+    borderColor: Colors.butterDark,
   },
   emoji: {
-    fontSize: 26,
+    fontSize: 28,
   },
   textContent: {
     flex: 1,
   },
   title: {
-    fontSize: FontSize.title3,
+    fontSize: FontSize.title2,
     fontWeight: FontWeight.bold,
     color: Colors.textPrimary,
     marginBottom: Spacing.xs,
   },
   description: {
-    fontSize: FontSize.bodySmall,
+    fontSize: FontSize.body,
     color: Colors.textSecondary,
     lineHeight: 20,
     marginBottom: Spacing.sm,
@@ -112,11 +113,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: Spacing.sm,
+    flexWrap: "wrap",
   },
   topicBadge: {
     backgroundColor: Colors.surfaceSecondary,
     borderRadius: Radius.pill,
-    paddingVertical: 3,
+    paddingVertical: 5,
     paddingHorizontal: Spacing.sm,
     borderWidth: 1,
     borderColor: Colors.border,
@@ -130,7 +132,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: Colors.textMuted,
     fontWeight: FontWeight.regular,
-    marginLeft: Spacing.sm,
+    marginTop: 6,
   },
   progressBadge: {
     backgroundColor: Colors.successBg,
@@ -139,5 +141,11 @@ const styles = StyleSheet.create({
   progressBadgeText: {
     color: Colors.success,
     fontWeight: FontWeight.bold,
+  },
+  cta: {
+    marginTop: Spacing.sm,
+    fontSize: FontSize.bodySmall,
+    fontWeight: FontWeight.bold,
+    color: Colors.primary,
   },
 });

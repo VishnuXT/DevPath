@@ -1,12 +1,6 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Pressable,
-  SafeAreaView,
-  StatusBar,
-} from "react-native";
+import { View, Text, StyleSheet, Pressable, StatusBar } from "react-native";
 import { router } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Colors, FontSize, FontWeight, Spacing, Radius, Elevation } from "../constants/theme";
 
 export default function SplashScreen() {
@@ -14,26 +8,23 @@ export default function SplashScreen() {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={Colors.primary} />
 
-      {/* Background decorative circles */}
       <View style={styles.circleTopRight} />
       <View style={styles.circleBottomLeft} />
 
-      {/* Logo area */}
       <View style={styles.logoSection}>
         <View style={styles.logoRing}>
-          <Text style={styles.logoEmoji}>🚀</Text>
+          <Text style={styles.logoEmoji}>🌱</Text>
         </View>
 
-        <Text style={styles.appName}>DevPath</Text>
-        <Text style={styles.tagline}>Learn. Build. Get Hired.</Text>
+        <Text style={styles.appName}>DevRoot</Text>
+        <Text style={styles.tagline}>Learn Development from the Roots.</Text>
       </View>
 
-      {/* Feature list */}
       <View style={styles.features}>
         {[
-          { icon: "🗺️", text: "Structured career roadmaps" },
-          { icon: "📖", text: "Beginner-friendly lessons" },
-          { icon: "🛠️", text: "Real-world mini projects" },
+          { icon: "🌱", text: "Step-by-step learning paths" },
+          { icon: "📘", text: "Beginner-friendly lessons" },
+          { icon: "🧩", text: "Real projects and quizzes" },
         ].map((f, i) => (
           <View key={i} style={styles.featureRow}>
             <Text style={styles.featureIcon}>{f.icon}</Text>
@@ -42,7 +33,6 @@ export default function SplashScreen() {
         ))}
       </View>
 
-      {/* CTA */}
       <View style={styles.ctaSection}>
         <Pressable
           style={({ pressed }) => [styles.ctaBtn, pressed && styles.ctaBtnPressed]}
@@ -52,7 +42,7 @@ export default function SplashScreen() {
           <Text style={styles.ctaBtnArrow}>→</Text>
         </Pressable>
 
-        <Text style={styles.ctaHint}>Free to use — no account required</Text>
+        <Text style={styles.ctaHint}>Free to use - no account required</Text>
       </View>
     </SafeAreaView>
   );
@@ -66,8 +56,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingBottom: Spacing.xxxl,
   },
-
-  // Decorative background elements
   circleTopRight: {
     position: "absolute",
     top: -60,
@@ -88,8 +76,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primaryLight,
     opacity: 0.2,
   },
-
-  // Logo section
   logoSection: {
     alignItems: "center",
     marginTop: Spacing.hero,
@@ -120,8 +106,6 @@ const styles = StyleSheet.create({
     fontWeight: FontWeight.medium,
     letterSpacing: 1,
   },
-
-  // Feature list
   features: {
     gap: Spacing.md,
   },
@@ -144,8 +128,6 @@ const styles = StyleSheet.create({
     color: "rgba(255,255,255,0.9)",
     fontWeight: FontWeight.medium,
   },
-
-  // CTA
   ctaSection: {
     alignItems: "center",
     gap: Spacing.md,

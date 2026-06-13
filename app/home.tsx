@@ -3,11 +3,12 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  SafeAreaView,
   StatusBar,
   ActivityIndicator,
+  Pressable,
 } from "react-native";
 import { router } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 import PathCard from "../components/PathCard";
 import ProgressBar from "../components/ProgressBar";
 import { careerPaths } from "../data";
@@ -51,33 +52,27 @@ export default function HomeScreen() {
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" backgroundColor={Colors.background} />
 
-      <ScrollView
-        contentContainerStyle={styles.scroll}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* ── Top Bar ─────────────────────────────── */}
+      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <View style={styles.topBar}>
           <View>
             <Text style={styles.greeting}>Good to see you 👋</Text>
-            <Text style={styles.topBarTitle}>DevPath</Text>
+            <Text style={styles.topBarTitle}>DevRoot</Text>
           </View>
           <View style={styles.avatarPlaceholder}>
             <Text style={styles.avatarText}>D</Text>
           </View>
         </View>
 
-        {/* ── Hero Banner ──────────────────────────── */}
         <View style={styles.heroBanner}>
           <View style={styles.heroBannerLeft}>
-            <Text style={styles.heroBannerLabel}>YOUR JOURNEY</Text>
+            <Text style={styles.heroBannerLabel}>LEARN FROM THE ROOTS</Text>
             <Text style={styles.heroBannerTitle}>
-              Choose a career path to begin
+              Learn development one step at a time
             </Text>
             <Text style={styles.heroBannerSub}>
-              Guided roadmaps, real lessons, and hands-on projects.
+              Lessons, quizzes, and projects designed for complete beginners.
             </Text>
 
-            {/* Progress teaser */}
             <View style={styles.heroBannerProgress}>
               <View style={styles.heroBannerProgressRow}>
                 <Text style={styles.heroBannerProgressLabel}>Overall Progress</Text>
@@ -101,18 +96,25 @@ export default function HomeScreen() {
             </View>
           </View>
 
-          {/* Decorative illustration placeholder */}
           <View style={styles.heroBannerIcon}>
             <Text style={styles.heroBannerEmoji}>🎯</Text>
           </View>
         </View>
 
-        {/* ── Stats Row ───────────────────────────── */}
         <View style={styles.statsRow}>
           {[
             { label: "Career Paths", value: "3" },
-            { label: "Total Topics", value: `${Object.values(careerPaths).reduce((a, p) => a + p.roadmap.length, 0)}` },
-            { label: "Projects", value: `${Object.values(careerPaths).reduce((a, p) => a + p.roadmap.reduce((b, r) => b + (r.projects?.length ?? 0), 0), 0)}` },
+            {
+              label: "Total Topics",
+              value: `${Object.values(careerPaths).reduce((a, p) => a + p.roadmap.length, 0)}`,
+            },
+            {
+              label: "Projects",
+              value: `${Object.values(careerPaths).reduce(
+                (a, p) => a + p.roadmap.reduce((b, r) => b + (r.projects?.length ?? 0), 0),
+                0
+              )}`,
+            },
           ].map((stat, i) => (
             <View key={i} style={styles.statCard}>
               <Text style={styles.statCardNumber}>{stat.value}</Text>
@@ -121,10 +123,9 @@ export default function HomeScreen() {
           ))}
         </View>
 
-        {/* ── Path Selection ───────────────────────── */}
         <View style={styles.pathSection}>
           <Text style={styles.sectionLabel}>PICK YOUR PATH</Text>
-          <Text style={styles.sectionTitle}>Where do you want to go?</Text>
+          <Text style={styles.sectionTitle}>Start where you feel ready</Text>
         </View>
 
         {PATHS.map((p) => {
@@ -141,6 +142,14 @@ export default function HomeScreen() {
             />
           );
         })}
+
+        <Pressable
+          style={({ pressed }) => [styles.quizBtn, pressed && styles.quizBtnPressed]}
+          onPress={() => router.push("/quiz")}
+        >
+          <Text style={styles.quizBtnLabel}>Open Quiz Demo</Text>
+          <Text style={styles.quizBtnText}>Take the reusable quiz screen</Text>
+        </Pressable>
       </ScrollView>
     </SafeAreaView>
   );
@@ -155,8 +164,6 @@ const styles = StyleSheet.create({
     padding: Spacing.xl,
     paddingBottom: Spacing.hero,
   },
-
-  // Top bar
   topBar: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -188,8 +195,6 @@ const styles = StyleSheet.create({
     fontWeight: FontWeight.bold,
     color: Colors.primary,
   },
-
-  // Hero banner
   heroBanner: {
     backgroundColor: Colors.primary,
     borderRadius: Radius.xl,
@@ -261,8 +266,6 @@ const styles = StyleSheet.create({
   heroBannerEmoji: {
     fontSize: 32,
   },
-
-  // Stats row
   statsRow: {
     flexDirection: "row",
     gap: Spacing.sm,
@@ -290,8 +293,6 @@ const styles = StyleSheet.create({
     marginTop: 2,
     textAlign: "center",
   },
-
-  // Path section heading
   pathSection: {
     marginBottom: Spacing.lg,
   },
@@ -304,5 +305,27 @@ const styles = StyleSheet.create({
     fontSize: FontSize.title3,
     fontWeight: FontWeight.bold,
     color: Colors.textPrimary,
+  },
+  quizBtn: {
+    marginTop: Spacing.lg,
+    backgroundColor: Colors.primary,
+    borderRadius: Radius.xl,
+    padding: Spacing.xl,
+    borderWidth: 1,
+    borderColor: Colors.primaryDark,
+    ...Elevation.md,
+  },
+  quizBtnPressed: {
+    backgroundColor: Colors.primaryDark,
+  },
+  quizBtnLabel: {
+    ...LabelChip,
+    color: Colors.butter,
+    marginBottom: Spacing.xs,
+  },
+  quizBtnText: {
+    color: Colors.textInverse,
+    fontSize: FontSize.body,
+    fontWeight: FontWeight.semiBold,
   },
 });

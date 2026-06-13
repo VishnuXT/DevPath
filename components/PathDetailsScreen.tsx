@@ -4,10 +4,10 @@ import {
   Text,
   StyleSheet,
   Pressable,
-  SafeAreaView,
   Alert,
 } from "react-native";
 import { router } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { CareerPath } from "../data/types";
 import ProgressBar from "./ProgressBar";
 import AppHeader from "./AppHeader";
@@ -39,11 +39,7 @@ export default function PathDetailsScreen({
     <SafeAreaView style={styles.safeArea}>
       <AppHeader title={data.title} />
 
-      <ScrollView
-        contentContainerStyle={styles.scroll}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* ── Hero Banner ──────────────────────────── */}
+      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <View style={styles.hero}>
           <View style={styles.heroIconRing}>
             <Text style={styles.heroEmoji}>{data.emoji}</Text>
@@ -51,15 +47,11 @@ export default function PathDetailsScreen({
           <Text style={styles.heroTitle}>{data.title}</Text>
           <Text style={styles.heroSubtitle}>{data.description}</Text>
 
-          {/* Timeline badge */}
           <View style={styles.timelineBadge}>
-            <Text style={styles.timelineBadgeText}>
-              ⏱ {data.learningTimeline} to job-ready
-            </Text>
+            <Text style={styles.timelineBadgeText}>Timeline: {data.learningTimeline}</Text>
           </View>
         </View>
 
-        {/* ── Stats Strip ──────────────────────────── */}
         <View style={styles.statsStrip}>
           <View style={styles.statItem}>
             <Text style={styles.statNumber}>{data.roadmap.length}</Text>
@@ -77,7 +69,6 @@ export default function PathDetailsScreen({
           </View>
         </View>
 
-        {/* ── Progress ─────────────────────────────── */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Your Progress</Text>
@@ -89,13 +80,12 @@ export default function PathDetailsScreen({
             <ProgressBar progress={progress} color={Colors.primary} height={10} />
             <Text style={styles.progressHint}>
               {progress === 0
-                ? "You haven't started yet — let's go! 🚀"
+                ? "You haven&apos;t started yet - let&apos;s go!"
                 : `You're ${progress}% of the way there. Keep going!`}
             </Text>
           </View>
         </View>
 
-        {/* ── Technologies ─────────────────────────── */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Technologies</Text>
           <View style={styles.techGrid}>
@@ -108,9 +98,8 @@ export default function PathDetailsScreen({
           </View>
         </View>
 
-        {/* ── Skills ───────────────────────────────── */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{"Skills You'll Gain"}</Text>
+          <Text style={styles.sectionTitle}>Skills You&apos;ll Gain</Text>
           <View style={styles.card}>
             {data.skills.map((skill, i) => (
               <View key={i} style={styles.skillRow}>
@@ -121,7 +110,6 @@ export default function PathDetailsScreen({
           </View>
         </View>
 
-        {/* ── Career Opportunities ─────────────────── */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Career Roles</Text>
           <View style={styles.rolesGrid}>
@@ -133,7 +121,6 @@ export default function PathDetailsScreen({
           </View>
         </View>
 
-        {/* ── Roadmap Preview ──────────────────────── */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Roadmap Preview</Text>
@@ -142,12 +129,7 @@ export default function PathDetailsScreen({
             {data.roadmap.map((item, i) => (
               <View key={item.id} style={styles.previewRow}>
                 <View style={[styles.previewDot, i === 0 && styles.previewDotActive]} />
-                <Text
-                  style={[
-                    styles.previewText,
-                    i === 0 && styles.previewTextActive,
-                  ]}
-                >
+                <Text style={[styles.previewText, i === 0 && styles.previewTextActive]}>
                   {i + 1}. {item.title}
                 </Text>
               </View>
@@ -155,7 +137,6 @@ export default function PathDetailsScreen({
           </View>
         </View>
 
-        {/* ── CTA ──────────────────────────────────── */}
         <Pressable
           style={({ pressed }) => [styles.ctaBtn, pressed && styles.ctaBtnPressed]}
           onPress={() =>
@@ -201,12 +182,10 @@ const styles = StyleSheet.create({
     padding: Spacing.xl,
     paddingBottom: Spacing.hero,
   },
-
-  // Hero
   hero: {
     alignItems: "center",
     backgroundColor: Colors.primary,
-    borderRadius: Radius.xl,
+    borderRadius: Radius.xxl,
     padding: Spacing.xxxl,
     marginBottom: Spacing.xl,
     ...Elevation.md,
@@ -249,8 +228,6 @@ const styles = StyleSheet.create({
     fontWeight: FontWeight.semiBold,
     color: Colors.primary,
   },
-
-  // Stats Strip
   statsStrip: {
     flexDirection: "row",
     backgroundColor: Colors.surface,
@@ -283,8 +260,6 @@ const styles = StyleSheet.create({
     height: 32,
     backgroundColor: Colors.border,
   },
-
-  // Section
   section: {
     marginBottom: Spacing.xl,
   },
@@ -304,8 +279,6 @@ const styles = StyleSheet.create({
     fontWeight: FontWeight.semiBold,
     color: Colors.textMuted,
   },
-
-  // Generic Card
   card: {
     backgroundColor: Colors.surface,
     borderRadius: Radius.lg,
@@ -319,8 +292,6 @@ const styles = StyleSheet.create({
     fontSize: FontSize.bodySmall,
     color: Colors.textSecondary,
   },
-
-  // Technology chips
   techGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -346,8 +317,6 @@ const styles = StyleSheet.create({
     fontWeight: FontWeight.semiBold,
     color: Colors.textPrimary,
   },
-
-  // Skills list
   skillRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -365,8 +334,6 @@ const styles = StyleSheet.create({
     color: Colors.textSecondary,
     flex: 1,
   },
-
-  // Career roles
   rolesGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -385,8 +352,6 @@ const styles = StyleSheet.create({
     fontWeight: FontWeight.semiBold,
     color: Colors.textSecondary,
   },
-
-  // Roadmap Preview
   previewRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -410,8 +375,6 @@ const styles = StyleSheet.create({
     color: Colors.textPrimary,
     fontWeight: FontWeight.semiBold,
   },
-
-  // CTA button
   ctaBtn: {
     flexDirection: "row",
     alignItems: "center",

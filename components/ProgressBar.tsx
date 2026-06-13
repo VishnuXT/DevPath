@@ -2,7 +2,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { Colors, Radius } from "../constants/theme";
 
 interface ProgressBarProps {
-  progress: number; // 0–100
+  progress: number; // 0-100
   height?: number;
   color?: string;
   backgroundColor?: string;
@@ -19,13 +19,8 @@ export default function ProgressBar({
   const clamped = Math.max(0, Math.min(100, progress));
 
   return (
-    <View>
-      <View
-        style={[
-          styles.track,
-          { height, backgroundColor },
-        ]}
-      >
+    <View style={styles.container}>
+      <View style={[styles.track, { height, backgroundColor }]}>
         <View
           style={[
             styles.fill,
@@ -37,25 +32,26 @@ export default function ProgressBar({
           ]}
         />
       </View>
-      {showLabel && (
-        <Text style={styles.label}>{clamped}% complete</Text>
-      )}
+      {showLabel && <Text style={styles.label}>{clamped}% complete</Text>}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    gap: 6,
+  },
   track: {
     width: "100%",
     borderRadius: Radius.pill,
     overflow: "hidden",
+    backgroundColor: Colors.surfaceTertiary,
   },
   fill: {
     borderRadius: Radius.pill,
   },
   label: {
-    marginTop: 5,
-    fontSize: 11,
+    fontSize: 12,
     color: Colors.textMuted,
     fontWeight: "600",
   },

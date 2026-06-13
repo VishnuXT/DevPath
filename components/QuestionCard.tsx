@@ -25,8 +25,12 @@ export default function QuestionCard({
   return (
     <View style={styles.card}>
       <View style={styles.headerRow}>
-        <Text style={styles.count}>{questionNumber}/{totalQuestions}</Text>
-        <Text style={styles.badge}>Question</Text>
+        <View style={styles.stepPill}>
+          <Text style={styles.count}>
+            {questionNumber}/{totalQuestions}
+          </Text>
+        </View>
+        <Text style={styles.badge}>One choice only</Text>
       </View>
 
       <Text style={styles.question}>{question}</Text>
@@ -80,7 +84,7 @@ export default function QuestionCard({
 const styles = StyleSheet.create({
   card: {
     backgroundColor: Colors.surface,
-    borderRadius: Radius.xl,
+    borderRadius: Radius.xxl,
     padding: Spacing.xl,
     borderWidth: 1,
     borderColor: Colors.border,
@@ -92,25 +96,32 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginBottom: Spacing.md,
   },
+  stepPill: {
+    backgroundColor: Colors.surfaceSecondary,
+    borderRadius: Radius.pill,
+    paddingHorizontal: Spacing.sm,
+    paddingVertical: 5,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
   count: {
     fontSize: FontSize.caption,
     fontWeight: FontWeight.bold,
-    letterSpacing: 1,
-    color: Colors.primaryLight,
-    textTransform: "uppercase",
+    letterSpacing: 0.5,
+    color: Colors.primary,
   },
   badge: {
     fontSize: FontSize.caption,
     fontWeight: FontWeight.semiBold,
-    color: Colors.primary,
-    backgroundColor: Colors.butter,
+    color: Colors.textSecondary,
+    backgroundColor: Colors.surfaceSecondary,
     paddingHorizontal: Spacing.sm,
     paddingVertical: 4,
     borderRadius: Radius.pill,
   },
   question: {
     fontSize: FontSize.title3,
-    lineHeight: 28,
+    lineHeight: 30,
     color: Colors.textPrimary,
     fontWeight: FontWeight.bold,
     marginBottom: Spacing.xl,
@@ -119,11 +130,11 @@ const styles = StyleSheet.create({
     gap: Spacing.sm,
   },
   option: {
-    minHeight: 54,
+    minHeight: 58,
     flexDirection: "row",
     alignItems: "center",
     gap: Spacing.md,
-    borderRadius: Radius.lg,
+    borderRadius: Radius.xl,
     borderWidth: 1.5,
     borderColor: Colors.border,
     paddingHorizontal: Spacing.md,

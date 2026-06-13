@@ -1,13 +1,6 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  SafeAreaView,
-  Pressable,
-  Alert,
-} from "react-native";
+import { View, Text, StyleSheet, ScrollView, Pressable, Alert } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { careerPaths } from "../data";
 import RoadmapItem from "../components/RoadmapItem";
 import ProgressBar from "../components/ProgressBar";
@@ -43,13 +36,8 @@ export default function RoadmapScreen() {
     <SafeAreaView style={styles.safeArea}>
       <AppHeader title={`${data.title} Roadmap`} />
 
-      <ScrollView
-        contentContainerStyle={styles.scroll}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* ── Progress card ────────────────────────── */}
+      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <View style={styles.progressCard}>
-          {/* Path label */}
           <View style={styles.pathLabelRow}>
             <Text style={styles.pathEmoji}>{data.emoji}</Text>
             <Text style={styles.pathLabel}>{data.title}</Text>
@@ -69,19 +57,16 @@ export default function RoadmapScreen() {
 
           <ProgressBar progress={progressPercent} height={10} color={Colors.primary} />
 
-          {/* Timeline */}
           <View style={styles.timelineRow}>
-            <Text style={styles.timelineText}>⏱ {data.learningTimeline}</Text>
+            <Text style={styles.timelineText}>Timeline: {data.learningTimeline}</Text>
           </View>
         </View>
 
-        {/* ── Section heading ──────────────────────── */}
         <View style={styles.headingRow}>
           <Text style={styles.headingLabel}>ROADMAP</Text>
           <Text style={styles.headingTitle}>Your Learning Path</Text>
         </View>
 
-        {/* ── Timeline items ───────────────────────── */}
         <View style={styles.timeline}>
           {data.roadmap.map((item, index) => (
             <RoadmapItem
@@ -101,7 +86,6 @@ export default function RoadmapScreen() {
           ))}
         </View>
 
-        {/* ── Restart Course ────────────────────────── */}
         {completedCount > 0 && (
           <Pressable
             style={({ pressed }) => [styles.resetBtn, pressed && styles.resetBtnPressed]}
@@ -137,11 +121,9 @@ const styles = StyleSheet.create({
     padding: Spacing.xl,
     paddingBottom: Spacing.hero,
   },
-
-  // Progress card
   progressCard: {
     backgroundColor: Colors.surface,
-    borderRadius: Radius.xl,
+    borderRadius: Radius.xxl,
     borderWidth: 1,
     borderColor: Colors.border,
     padding: Spacing.xl,
@@ -180,7 +162,7 @@ const styles = StyleSheet.create({
   },
   progressPctBadge: {
     backgroundColor: Colors.butter,
-    borderRadius: Radius.md,
+    borderRadius: Radius.xl,
     paddingVertical: Spacing.sm,
     paddingHorizontal: Spacing.md,
   },
@@ -200,8 +182,6 @@ const styles = StyleSheet.create({
     color: Colors.textMuted,
     fontWeight: FontWeight.medium,
   },
-
-  // Heading
   headingRow: {
     marginBottom: Spacing.lg,
   },
@@ -215,19 +195,15 @@ const styles = StyleSheet.create({
     fontWeight: FontWeight.bold,
     color: Colors.textPrimary,
   },
-
-  // Timeline container
   timeline: {
     paddingLeft: Spacing.xs,
   },
-
-  // Restart button
   resetBtn: {
     marginTop: Spacing.xl,
     marginBottom: Spacing.md,
     borderWidth: 1.5,
     borderColor: Colors.error,
-    borderRadius: Radius.md,
+    borderRadius: Radius.xl,
     paddingVertical: Spacing.md,
     alignItems: "center",
     justifyContent: "center",

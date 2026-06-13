@@ -1,12 +1,6 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  SafeAreaView,
-  Pressable,
-} from "react-native";
+import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { careerPaths } from "../../data";
 import AppHeader from "../../components/AppHeader";
 import { useProgress } from "../../context/ProgressContext";
@@ -48,11 +42,7 @@ export default function RoadmapItemDetailScreen() {
     <SafeAreaView style={styles.safeArea}>
       <AppHeader title={topicData.title} />
 
-      <ScrollView
-        contentContainerStyle={styles.scroll}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* ── Topic Overview ────────────────────────── */}
+      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <View style={styles.overviewCard}>
           <Text style={styles.overviewLabel}>TOPIC OVERVIEW</Text>
           <Text style={styles.overviewTitle}>{topicData.title}</Text>
@@ -60,9 +50,7 @@ export default function RoadmapItemDetailScreen() {
 
           <View style={styles.overviewMeta}>
             <View style={styles.metaBadge}>
-              <Text style={styles.metaBadgeText}>
-                📖 {topicData.lessons.length} lessons
-              </Text>
+              <Text style={styles.metaBadgeText}>📖 {topicData.lessons.length} lessons</Text>
             </View>
             {topicData.projects && topicData.projects.length > 0 && (
               <View style={styles.metaBadge}>
@@ -75,10 +63,30 @@ export default function RoadmapItemDetailScreen() {
           </View>
         </View>
 
-        {/* ── Lessons ──────────────────────────────── */}
+        <Pressable
+          style={({ pressed }) => [styles.quizBtn, pressed && styles.quizBtnPressed]}
+          onPress={() =>
+            router.push({
+              pathname: "/quiz/[path]/[module]",
+              params: { path: pathId, module: topicId },
+            })
+          }
+        >
+          <Text style={styles.quizBtnText}>Take Module Quiz</Text>
+          <Text style={styles.quizBtnArrow}>→</Text>
+        </Pressable>
+
+        <Pressable
+          style={({ pressed }) => [styles.demoQuizBtn, pressed && styles.demoQuizBtnPressed]}
+          onPress={() => router.push("/quiz")}
+        >
+          <Text style={styles.demoQuizBtnText}>Try Demo Quiz Instead</Text>
+          <Text style={styles.demoQuizBtnArrow}>→</Text>
+        </Pressable>
+
         <View style={styles.section}>
           <Text style={styles.sectionLabel}>LESSONS</Text>
-          <Text style={styles.sectionTitle}>{"What you'll learn"}</Text>
+          <Text style={styles.sectionTitle}>What you&apos;ll learn</Text>
 
           <View style={styles.lessonsList}>
             {topicData.lessons.map((lesson, idx) => (
@@ -95,12 +103,10 @@ export default function RoadmapItemDetailScreen() {
                   })
                 }
               >
-                {/* Number */}
                 <View style={styles.lessonNum}>
                   <Text style={styles.lessonNumText}>{idx + 1}</Text>
                 </View>
 
-                {/* Content */}
                 <View style={styles.lessonContent}>
                   <Text style={styles.lessonTitle}>{lesson.title}</Text>
                   <Text style={styles.lessonPreview} numberOfLines={2}>
@@ -108,9 +114,18 @@ export default function RoadmapItemDetailScreen() {
                   </Text>
                 </View>
 
-                {/* Status chip */}
-                <View style={[styles.startChip, isLessonCompleted(lesson.id) && styles.completedChip]}>
-                  <Text style={[styles.startChipText, isLessonCompleted(lesson.id) && styles.completedChipText]}>
+                <View
+                  style={[
+                    styles.startChip,
+                    isLessonCompleted(lesson.id) && styles.completedChip,
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.startChipText,
+                      isLessonCompleted(lesson.id) && styles.completedChipText,
+                    ]}
+                  >
                     {isLessonCompleted(lesson.id) ? "Completed ✓" : "Start"}
                   </Text>
                 </View>
@@ -119,7 +134,6 @@ export default function RoadmapItemDetailScreen() {
           </View>
         </View>
 
-        {/* ── Mini Projects ─────────────────────────── */}
         {topicData.projects && topicData.projects.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionLabel}>MINI PROJECT</Text>
@@ -139,15 +153,24 @@ export default function RoadmapItemDetailScreen() {
                   })
                 }
               >
-                {/* Header */}
                 <View style={styles.projectHeader}>
                   <View style={styles.projectIconBox}>
                     <Text style={styles.projectIcon}>🛠️</Text>
                   </View>
                   <View style={styles.projectMeta}>
                     <Text style={styles.projectTitle}>{project.title}</Text>
-                    <View style={[styles.projectBadge, isProjectCompleted(project.id) && styles.completedChip]}>
-                      <Text style={[styles.projectBadgeText, isProjectCompleted(project.id) && styles.completedChipText]}>
+                    <View
+                      style={[
+                        styles.projectBadge,
+                        isProjectCompleted(project.id) && styles.completedChip,
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          styles.projectBadgeText,
+                          isProjectCompleted(project.id) && styles.completedChipText,
+                        ]}
+                      >
                         {isProjectCompleted(project.id) ? "Completed ✓" : "Practice Project"}
                       </Text>
                     </View>
@@ -156,12 +179,11 @@ export default function RoadmapItemDetailScreen() {
 
                 <Text style={styles.projectDesc}>{project.description}</Text>
 
-                {/* Requirements preview */}
                 <View style={styles.reqPreview}>
                   <Text style={styles.reqPreviewLabel}>Requirements</Text>
                   {project.requirements.slice(0, 2).map((req, i) => (
                     <Text key={i} style={styles.reqPreviewItem} numberOfLines={1}>
-                      · {req}
+                      • {req}
                     </Text>
                   ))}
                   {project.requirements.length > 2 && (
@@ -171,9 +193,16 @@ export default function RoadmapItemDetailScreen() {
                   )}
                 </View>
 
-                <View style={[styles.viewGuideBtn, isProjectCompleted(project.id) && { backgroundColor: Colors.success }]}>
+                <View
+                  style={[
+                    styles.viewGuideBtn,
+                    isProjectCompleted(project.id) && { backgroundColor: Colors.success },
+                  ]}
+                >
                   <Text style={styles.viewGuideBtnText}>
-                    {isProjectCompleted(project.id) ? "Completed ✓ Review Guide" : "View Project Guide →"}
+                    {isProjectCompleted(project.id)
+                      ? "Completed ✓ Review Guide"
+                      : "View Project Guide →"}
                   </Text>
                 </View>
               </Pressable>
@@ -194,8 +223,6 @@ const styles = StyleSheet.create({
     padding: Spacing.xl,
     paddingBottom: Spacing.hero,
   },
-
-  // Empty state
   emptyState: {
     flex: 1,
     alignItems: "center",
@@ -218,11 +245,9 @@ const styles = StyleSheet.create({
     color: Colors.textInverse,
     fontWeight: FontWeight.semiBold,
   },
-
-  // Overview card
   overviewCard: {
     backgroundColor: Colors.primary,
-    borderRadius: Radius.xl,
+    borderRadius: Radius.xxl,
     padding: Spacing.xl,
     marginBottom: Spacing.xl,
     ...Elevation.md,
@@ -259,8 +284,6 @@ const styles = StyleSheet.create({
     fontWeight: FontWeight.semiBold,
     color: Colors.primary,
   },
-
-  // Section
   section: {
     marginBottom: Spacing.xl,
   },
@@ -275,8 +298,58 @@ const styles = StyleSheet.create({
     color: Colors.textPrimary,
     marginBottom: Spacing.md,
   },
-
-  // Lessons
+  quizBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: Spacing.sm,
+    backgroundColor: Colors.butter,
+    borderRadius: Radius.xl,
+    paddingVertical: Spacing.md,
+    paddingHorizontal: Spacing.lg,
+    marginBottom: Spacing.xl,
+    borderWidth: 1,
+    borderColor: Colors.butterDark,
+  },
+  quizBtnPressed: {
+    backgroundColor: Colors.butterMid,
+  },
+  quizBtnText: {
+    fontSize: FontSize.body,
+    fontWeight: FontWeight.bold,
+    color: Colors.primary,
+  },
+  quizBtnArrow: {
+    fontSize: FontSize.body,
+    fontWeight: FontWeight.bold,
+    color: Colors.primaryDark,
+  },
+  demoQuizBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: Spacing.sm,
+    backgroundColor: Colors.surface,
+    borderRadius: Radius.xl,
+    paddingVertical: Spacing.md,
+    paddingHorizontal: Spacing.lg,
+    marginBottom: Spacing.xl,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  demoQuizBtnPressed: {
+    backgroundColor: Colors.surfaceSecondary,
+  },
+  demoQuizBtnText: {
+    fontSize: FontSize.body,
+    fontWeight: FontWeight.bold,
+    color: Colors.textPrimary,
+  },
+  demoQuizBtnArrow: {
+    fontSize: FontSize.body,
+    fontWeight: FontWeight.bold,
+    color: Colors.textMuted,
+  },
   lessonsList: {
     gap: Spacing.sm,
   },
@@ -284,7 +357,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: Colors.surface,
-    borderRadius: Radius.lg,
+    borderRadius: Radius.xl,
     borderWidth: 1,
     borderColor: Colors.border,
     padding: Spacing.md,
@@ -332,8 +405,6 @@ const styles = StyleSheet.create({
     fontWeight: FontWeight.bold,
     color: Colors.primary,
   },
-
-  // Projects
   projectCard: {
     backgroundColor: Colors.surface,
     borderRadius: Radius.xl,
@@ -415,7 +486,7 @@ const styles = StyleSheet.create({
   },
   viewGuideBtn: {
     backgroundColor: Colors.primary,
-    borderRadius: Radius.md,
+    borderRadius: Radius.xl,
     paddingVertical: Spacing.md,
     alignItems: "center",
   },

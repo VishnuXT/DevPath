@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────
-// DevPath Design System
+// DevRoot Design System
 // ─────────────────────────────────────────────
 
 // COLOR PALETTE
@@ -18,21 +18,21 @@ export const Colors = {
   butterAlpha40: "rgba(255, 239, 179, 0.40)",
 
   // Backgrounds
-  background: "#F5F7F5",
+  background: "#FAFAF8",
   surface: "#FFFFFF",
-  surfaceSecondary: "#EEF3F0",
-  surfaceTertiary: "#E6EDE9",
+  surfaceSecondary: "#F4F5F2",
+  surfaceTertiary: "#ECEDE8",
 
   // Text
   textPrimary: "#013E37",
-  textSecondary: "#4A706A",
-  textMuted: "#8AA49F",
+  textSecondary: "#6B7280",
+  textMuted: "#9CA3AF",
   textInverse: "#FFFFFF",
   textButter: "#FFEFB3",
 
   // Borders
-  border: "#DDE8E5",
-  borderLight: "#EEF3F0",
+  border: "#E5E7EB",
+  borderLight: "#EEF1ED",
 
   // Status
   success: "#059669",
@@ -91,32 +91,32 @@ export const Radius = {
 // ELEVATION (green-tinted shadows — not harsh black)
 export const Elevation = {
   sm: {
-    shadowColor: "#013E37",
+    shadowColor: "#0F172A",
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.06,
+    shadowOpacity: 0.05,
     shadowRadius: 4,
-    elevation: 2,
+    elevation: 1,
   },
   md: {
-    shadowColor: "#013E37",
-    shadowOffset: { width: 0, height: 3 },
+    shadowColor: "#0F172A",
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.08,
-    shadowRadius: 8,
-    elevation: 4,
+    shadowRadius: 10,
+    elevation: 3,
   },
   lg: {
-    shadowColor: "#013E37",
-    shadowOffset: { width: 0, height: 6 },
+    shadowColor: "#0F172A",
+    shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.10,
-    shadowRadius: 16,
-    elevation: 8,
+    shadowRadius: 18,
+    elevation: 6,
   },
 } as const;
 
 // REUSABLE CARD BASE
 export const CardBase = {
   backgroundColor: Colors.surface,
-  borderRadius: Radius.lg,
+  borderRadius: Radius.xl,
   borderWidth: 1,
   borderColor: Colors.border,
   ...Elevation.sm,

@@ -1,13 +1,7 @@
 import { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  SafeAreaView,
-  Pressable,
-} from "react-native";
+import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { careerPaths } from "../../data";
 import AppHeader from "../../components/AppHeader";
 import { useProgress } from "../../context/ProgressContext";
@@ -90,18 +84,13 @@ export default function LessonScreen() {
     <SafeAreaView style={styles.safeArea}>
       <AppHeader title={lessonData.title} />
 
-      <ScrollView
-        contentContainerStyle={styles.scroll}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* ── Concept section ──────────────────────── */}
+      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <View style={styles.conceptCard}>
           <Text style={styles.conceptLabel}>CONCEPT</Text>
           <Text style={styles.conceptTitle}>{lessonData.title}</Text>
           <Text style={styles.conceptBody}>{lessonData.explanation}</Text>
         </View>
 
-        {/* ── Code block ───────────────────────────── */}
         {lessonData.codeExample && (
           <View style={styles.codeSection}>
             <View style={styles.codeHeader}>
@@ -116,7 +105,6 @@ export default function LessonScreen() {
           </View>
         )}
 
-        {/* ── Quiz ─────────────────────────────────── */}
         <View style={styles.quizSection}>
           <Text style={styles.quizLabel}>MINI QUIZ</Text>
           <Text style={styles.quizQuestion}>{quiz.question}</Text>
@@ -129,7 +117,6 @@ export default function LessonScreen() {
                 onPress={() => !submitted && setSelectedIdx(idx)}
                 disabled={submitted}
               >
-                {/* Option letter */}
                 <View
                   style={[
                     styles.optionLetter,
@@ -151,13 +138,9 @@ export default function LessonScreen() {
             ))}
           </View>
 
-          {/* Submit / Feedback */}
           {!submitted ? (
             <Pressable
-              style={[
-                styles.submitBtn,
-                selectedIdx === null && styles.submitBtnDisabled,
-              ]}
+              style={[styles.submitBtn, selectedIdx === null && styles.submitBtnDisabled]}
               onPress={handleSubmit}
               disabled={selectedIdx === null}
             >
@@ -180,7 +163,7 @@ export default function LessonScreen() {
                 >
                   {isCorrect
                     ? "Correct! You've got this concept down."
-                    : "Not quite — review the explanation above and try again!"}
+                    : "Not quite - review the explanation above and try again!"}
                 </Text>
               </View>
 
@@ -223,8 +206,6 @@ const styles = StyleSheet.create({
     padding: Spacing.xl,
     paddingBottom: Spacing.hero,
   },
-
-  // Empty state
   emptyState: {
     flex: 1,
     alignItems: "center",
@@ -247,11 +228,9 @@ const styles = StyleSheet.create({
     color: Colors.textInverse,
     fontWeight: FontWeight.semiBold,
   },
-
-  // Concept
   conceptCard: {
     backgroundColor: Colors.surface,
-    borderRadius: Radius.xl,
+    borderRadius: Radius.xxl,
     borderWidth: 1,
     borderColor: Colors.border,
     padding: Spacing.xl,
@@ -275,11 +254,9 @@ const styles = StyleSheet.create({
     color: Colors.textSecondary,
     lineHeight: 25,
   },
-
-  // Code
   codeSection: {
     marginBottom: Spacing.xl,
-    borderRadius: Radius.xl,
+    borderRadius: Radius.xxl,
     overflow: "hidden",
     ...Elevation.sm,
   },
@@ -314,11 +291,9 @@ const styles = StyleSheet.create({
     color: Colors.butter,
     lineHeight: 22,
   },
-
-  // Quiz
   quizSection: {
     backgroundColor: Colors.surface,
-    borderRadius: Radius.xl,
+    borderRadius: Radius.xxl,
     borderWidth: 1,
     borderColor: Colors.border,
     padding: Spacing.xl,
@@ -344,7 +319,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: Colors.surface,
-    borderRadius: Radius.md,
+    borderRadius: Radius.xl,
     borderWidth: 1.5,
     borderColor: Colors.border,
     padding: Spacing.md,
@@ -408,11 +383,9 @@ const styles = StyleSheet.create({
   optionTextDisabled: {
     color: Colors.textMuted,
   },
-
-  // Submit button
   submitBtn: {
     backgroundColor: Colors.primary,
-    borderRadius: Radius.md,
+    borderRadius: Radius.xl,
     paddingVertical: Spacing.md,
     alignItems: "center",
   },
@@ -424,13 +397,11 @@ const styles = StyleSheet.create({
     fontWeight: FontWeight.bold,
     color: Colors.textInverse,
   },
-
-  // Feedback
   feedbackArea: {
     gap: Spacing.md,
   },
   feedbackCard: {
-    borderRadius: Radius.md,
+    borderRadius: Radius.xl,
     padding: Spacing.lg,
     flexDirection: "row",
     alignItems: "flex-start",
@@ -466,7 +437,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: Colors.primary,
-    borderRadius: Radius.md,
+    borderRadius: Radius.xl,
     paddingVertical: Spacing.md,
     gap: Spacing.sm,
   },
@@ -484,7 +455,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: Colors.error,
-    borderRadius: Radius.md,
+    borderRadius: Radius.xl,
     paddingVertical: Spacing.md,
   },
   tryAgainBtnText: {

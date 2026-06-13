@@ -1,12 +1,6 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  SafeAreaView,
-  Pressable,
-} from "react-native";
+import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { careerPaths } from "../../data";
 import AppHeader from "../../components/AppHeader";
 import { useProgress } from "../../context/ProgressContext";
@@ -52,11 +46,7 @@ export default function ProjectScreen() {
     <SafeAreaView style={styles.safeArea}>
       <AppHeader title={projectData.title} />
 
-      <ScrollView
-        contentContainerStyle={styles.scroll}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* ── Hero card ─────────────────────────────── */}
+      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <View style={styles.heroCard}>
           <View style={styles.heroTop}>
             <View style={styles.heroIconBox}>
@@ -70,7 +60,6 @@ export default function ProjectScreen() {
           <Text style={styles.heroDesc}>{projectData.description}</Text>
         </View>
 
-        {/* ── Requirements ──────────────────────────── */}
         <View style={styles.section}>
           <Text style={styles.sectionLabel}>REQUIREMENTS</Text>
           <Text style={styles.sectionTitle}>What to build</Text>
@@ -86,7 +75,6 @@ export default function ProjectScreen() {
           </View>
         </View>
 
-        {/* ── Folder Structure ──────────────────────── */}
         <View style={styles.section}>
           <Text style={styles.sectionLabel}>FOLDER STRUCTURE</Text>
           <Text style={styles.sectionTitle}>Project layout</Text>
@@ -103,7 +91,6 @@ export default function ProjectScreen() {
           </View>
         </View>
 
-        {/* ── Guide ─────────────────────────────────── */}
         <View style={styles.section}>
           <Text style={styles.sectionLabel}>IMPLEMENTATION GUIDE</Text>
           <Text style={styles.sectionTitle}>Step-by-step approach</Text>
@@ -112,12 +99,11 @@ export default function ProjectScreen() {
           </View>
         </View>
 
-        {/* ── CTA ──────────────────────────────────────*/}
         <Pressable
           style={({ pressed }) => [
             styles.ctaBtn,
             isProjectCompleted(projectData.id) && { backgroundColor: Colors.success },
-            pressed && { opacity: 0.85 }
+            pressed && { opacity: 0.85 },
           ]}
           onPress={async () => {
             await completeProject(projectData.id);
@@ -143,8 +129,6 @@ const styles = StyleSheet.create({
     padding: Spacing.xl,
     paddingBottom: Spacing.hero,
   },
-
-  // Empty state
   emptyState: {
     flex: 1,
     alignItems: "center",
@@ -167,11 +151,9 @@ const styles = StyleSheet.create({
     color: Colors.textInverse,
     fontWeight: FontWeight.semiBold,
   },
-
-  // Hero
   heroCard: {
     backgroundColor: Colors.primary,
-    borderRadius: Radius.xl,
+    borderRadius: Radius.xxl,
     padding: Spacing.xl,
     marginBottom: Spacing.xl,
     ...Elevation.md,
@@ -217,8 +199,6 @@ const styles = StyleSheet.create({
     color: "rgba(255,255,255,0.70)",
     lineHeight: 22,
   },
-
-  // Section
   section: {
     marginBottom: Spacing.xl,
   },
@@ -233,8 +213,6 @@ const styles = StyleSheet.create({
     color: Colors.textPrimary,
     marginBottom: Spacing.md,
   },
-
-  // Generic card
   card: {
     backgroundColor: Colors.surface,
     borderRadius: Radius.lg,
@@ -243,8 +221,6 @@ const styles = StyleSheet.create({
     padding: Spacing.lg,
     ...Elevation.sm,
   },
-
-  // Requirements
   reqRow: {
     flexDirection: "row",
     alignItems: "flex-start",
@@ -272,10 +248,8 @@ const styles = StyleSheet.create({
     color: Colors.textSecondary,
     lineHeight: 22,
   },
-
-  // Folder structure
   folderSection: {
-    borderRadius: Radius.lg,
+    borderRadius: Radius.xl,
     overflow: "hidden",
     ...Elevation.sm,
   },
@@ -310,21 +284,17 @@ const styles = StyleSheet.create({
     color: "#A3D9A5",
     lineHeight: 22,
   },
-
-  // Guide
   guideText: {
     fontSize: FontSize.body,
     color: Colors.textSecondary,
     lineHeight: 24,
   },
-
-  // CTA
   ctaBtn: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: Colors.primary,
-    borderRadius: Radius.lg,
+    borderRadius: Radius.xl,
     paddingVertical: Spacing.lg,
     gap: Spacing.sm,
     ...Elevation.md,
