@@ -1,42 +1,126 @@
-import { Pressable, Text, StyleSheet } from "react-native";
+import { Pressable, Text, View, StyleSheet } from "react-native";
+import {
+  Colors,
+  FontSize,
+  FontWeight,
+  Spacing,
+  Radius,
+  Elevation,
+} from "../constants/theme";
 
 interface PathCardProps {
   emoji: string;
   title: string;
+  description: string;
+  topicCount: number;
   onPress: () => void;
 }
 
 export default function PathCard({
   emoji,
   title,
+  description,
+  topicCount,
   onPress,
 }: PathCardProps) {
   return (
-    <Pressable style={styles.card} onPress={onPress}>
-      <Text style={styles.emoji}>{emoji}</Text>
-      <Text style={styles.title}>{title}</Text>
+    <Pressable
+      style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}
+      onPress={onPress}
+    >
+      {/* Icon Container */}
+      <View style={styles.iconContainer}>
+        <Text style={styles.emoji}>{emoji}</Text>
+      </View>
+
+      {/* Text Content */}
+      <View style={styles.textContent}>
+        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.description} numberOfLines={2}>
+          {description}
+        </Text>
+
+        {/* Meta Row */}
+        <View style={styles.metaRow}>
+          <View style={styles.topicBadge}>
+            <Text style={styles.topicBadgeText}>{topicCount} topics</Text>
+          </View>
+        </View>
+      </View>
+
+      {/* Chevron */}
+      <Text style={styles.chevron}>›</Text>
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#fff",
-    padding: 20,
-    borderRadius: 15,
-    marginBottom: 15,
     flexDirection: "row",
     alignItems: "center",
-    elevation: 4,
+    backgroundColor: Colors.surface,
+    borderRadius: Radius.xl,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    padding: Spacing.xl,
+    marginBottom: Spacing.md,
+    ...Elevation.sm,
   },
-
+  cardPressed: {
+    backgroundColor: Colors.surfaceSecondary,
+    transform: [{ scale: 0.99 }],
+  },
+  iconContainer: {
+    width: 52,
+    height: 52,
+    borderRadius: Radius.md,
+    backgroundColor: Colors.surfaceSecondary,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: Spacing.lg,
+    borderWidth: 1,
+    borderColor: Colors.borderLight,
+  },
   emoji: {
-    fontSize: 28,
-    marginRight: 15,
+    fontSize: 26,
   },
-
+  textContent: {
+    flex: 1,
+  },
   title: {
-    fontSize: 18,
-    fontWeight: "600",
+    fontSize: FontSize.title3,
+    fontWeight: FontWeight.bold,
+    color: Colors.textPrimary,
+    marginBottom: Spacing.xs,
+  },
+  description: {
+    fontSize: FontSize.bodySmall,
+    color: Colors.textSecondary,
+    lineHeight: 20,
+    marginBottom: Spacing.sm,
+  },
+  metaRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.sm,
+  },
+  topicBadge: {
+    backgroundColor: Colors.surfaceSecondary,
+    borderRadius: Radius.pill,
+    paddingVertical: 3,
+    paddingHorizontal: Spacing.sm,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  topicBadgeText: {
+    fontSize: FontSize.caption,
+    fontWeight: FontWeight.semiBold,
+    color: Colors.textSecondary,
+  },
+  chevron: {
+    fontSize: 24,
+    color: Colors.textMuted,
+    fontWeight: FontWeight.regular,
+    marginLeft: Spacing.sm,
   },
 });

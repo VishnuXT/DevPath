@@ -9,162 +9,179 @@ import {
 } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { careerPaths } from "../../data";
+import AppHeader from "../../components/AppHeader";
+import {
+  Colors,
+  FontSize,
+  FontWeight,
+  Spacing,
+  Radius,
+  Elevation,
+  LabelChip,
+} from "../../constants/theme";
 
 export default function LessonScreen() {
-  const params = useLocalSearchParams();
-  const lessonId = params.id as string;
-  const topicId = params.topicId as string;
-  const pathId = (params.path as string) || "backend";
+  const {
+    id: lessonId,
+    topicId,
+    path: pathId = "backend",
+  } = useLocalSearchParams<{ id: string; topicId: string; path: string }>();
 
-  // Retrieve lesson details
-  const pathData = careerPaths[pathId] || careerPaths.backend;
+  const pathData = careerPaths[pathId] ?? careerPaths.backend;
   const topicData = pathData.roadmap.find((t) => t.id === topicId);
   const lessonData = topicData?.lessons.find((l) => l.id === lessonId);
 
-  // Path specific theme color
-  let themeColor = "#2563EB"; // Backend default
-  if (pathId === "web") themeColor = "#0EA5E9";
-  if (pathId === "mobile") themeColor = "#8B5CF6";
-
-  // Quiz interactive state
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   if (!lessonData) {
     return (
       <SafeAreaView style={styles.safeArea}>
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>Lesson not found.</Text>
-          <Pressable style={[styles.button, { backgroundColor: themeColor }]} onPress={() => router.back()}>
-            <Text style={styles.buttonText}>Go Back</Text>
+        <AppHeader title="Lesson" />
+        <View style={styles.emptyState}>
+          <Text style={styles.emptyEmoji}>🔍</Text>
+          <Text style={styles.emptyTitle}>Lesson not found</Text>
+          <Pressable style={styles.emptyBtn} onPress={() => router.back()}>
+            <Text style={styles.emptyBtnText}>← Go Back</Text>
           </Pressable>
         </View>
       </SafeAreaView>
     );
   }
 
-  const handleOptionSelect = (idx: number) => {
-    if (isSubmitted) return; // locked after submission
-    setSelectedIdx(idx);
-  };
+  const quiz = lessonData.quiz;
+  const isCorrect = selectedIdx === quiz.answerIndex;
 
-  const handleQuizSubmit = () => {
+  function handleSubmit() {
     if (selectedIdx === null) return;
-    setIsSubmitted(true);
-  };
+    setSubmitted(true);
+  }
 
-  const isCorrect = selectedIdx === lessonData.quiz.answerIndex;
+  function getOptionStyle(idx: number) {
+    if (!submitted) {
+      return [styles.option, selectedIdx === idx && styles.optionSelected];
+    }
+    if (idx === quiz.answerIndex) return [styles.option, styles.optionCorrect];
+    if (idx === selectedIdx) return [styles.option, styles.optionWrong];
+    return [styles.option, styles.optionDisabled];
+  }
+
+  function getOptionTextStyle(idx: number) {
+    if (!submitted) {
+      return [styles.optionText, selectedIdx === idx && styles.optionTextSelected];
+    }
+    if (idx === quiz.answerIndex) return [styles.optionText, styles.optionTextCorrect];
+    if (idx === selectedIdx) return [styles.optionText, styles.optionTextWrong];
+    return [styles.optionText, styles.optionTextDisabled];
+  }
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      {/* Header */}
-      <View style={styles.headerBar}>
-        <Pressable style={styles.backButton} onPress={() => router.back()}>
-          <Text style={[styles.backText, { color: themeColor }]}>← Back</Text>
-        </Pressable>
-        <Text style={styles.headerTitle} numberOfLines={1}>
-          Lesson: {lessonData.title}
-        </Text>
-        <View style={{ width: 60 }} />
-      </View>
+      <AppHeader title={lessonData.title} />
 
-      <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
-        {/* Explanation Card */}
-        <View style={styles.explanationCard}>
-          <Text style={styles.sectionLabel}>CONCEPT</Text>
-          <Text style={styles.lessonTitle}>{lessonData.title}</Text>
-          <Text style={styles.explanationText}>{lessonData.explanation}</Text>
+      <ScrollView
+        contentContainerStyle={styles.scroll}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* ── Concept section ──────────────────────── */}
+        <View style={styles.conceptCard}>
+          <Text style={styles.conceptLabel}>CONCEPT</Text>
+          <Text style={styles.conceptTitle}>{lessonData.title}</Text>
+          <Text style={styles.conceptBody}>{lessonData.explanation}</Text>
         </View>
 
-        {/* Code Example */}
+        {/* ── Code block ───────────────────────────── */}
         {lessonData.codeExample && (
-          <View style={styles.codeContainer}>
-            <Text style={styles.codeLabel}>💻 CODE EXAMPLE</Text>
+          <View style={styles.codeSection}>
+            <View style={styles.codeHeader}>
+              <View style={styles.codeDot} />
+              <View style={[styles.codeDot, { backgroundColor: "#F7D774" }]} />
+              <View style={[styles.codeDot, { backgroundColor: "#10B981" }]} />
+              <Text style={styles.codeHeaderLabel}>Example</Text>
+            </View>
             <View style={styles.codeBlock}>
               <Text style={styles.codeText}>{lessonData.codeExample}</Text>
             </View>
           </View>
         )}
 
-        {/* Quiz Section */}
-        <View style={styles.quizCard}>
-          <Text style={styles.quizHeaderLabel}>⚡ MINI QUIZ</Text>
-          <Text style={styles.quizQuestion}>{lessonData.quiz.question}</Text>
+        {/* ── Quiz ─────────────────────────────────── */}
+        <View style={styles.quizSection}>
+          <Text style={styles.quizLabel}>MINI QUIZ</Text>
+          <Text style={styles.quizQuestion}>{quiz.question}</Text>
 
-          <View style={styles.optionsContainer}>
-            {lessonData.quiz.options.map((option, idx) => {
-              const isSelected = selectedIdx === idx;
-              let optionStyle = styles.optionButton;
-              let textStyle = styles.optionText;
-
-              if (isSelected) {
-                optionStyle = [styles.optionButton, styles.selectedOption, { borderColor: themeColor }];
-                textStyle = [styles.optionText, styles.selectedOptionText, { color: themeColor }];
-              }
-
-              if (isSubmitted) {
-                if (idx === lessonData.quiz.answerIndex) {
-                  optionStyle = [styles.optionButton, styles.correctOption];
-                  textStyle = [styles.optionText, styles.correctOptionText];
-                } else if (isSelected && !isCorrect) {
-                  optionStyle = [styles.optionButton, styles.incorrectOption];
-                  textStyle = [styles.optionText, styles.incorrectOptionText];
-                } else {
-                  optionStyle = [styles.optionButton, styles.disabledOption];
-                  textStyle = [styles.optionText, styles.disabledOptionText];
-                }
-              }
-
-              return (
-                <Pressable
-                  key={idx}
-                  style={optionStyle}
-                  onPress={() => handleOptionSelect(idx)}
-                  disabled={isSubmitted}
+          <View style={styles.options}>
+            {quiz.options.map((opt, idx) => (
+              <Pressable
+                key={idx}
+                style={getOptionStyle(idx)}
+                onPress={() => !submitted && setSelectedIdx(idx)}
+                disabled={submitted}
+              >
+                {/* Option letter */}
+                <View
+                  style={[
+                    styles.optionLetter,
+                    submitted && idx === quiz.answerIndex && styles.optionLetterCorrect,
+                    submitted && idx === selectedIdx && !isCorrect && styles.optionLetterWrong,
+                  ]}
                 >
-                  <Text style={textStyle}>{option}</Text>
-                </Pressable>
-              );
-            })}
+                  <Text
+                    style={[
+                      styles.optionLetterText,
+                      submitted && idx === quiz.answerIndex && styles.optionLetterTextCorrect,
+                    ]}
+                  >
+                    {String.fromCharCode(65 + idx)}
+                  </Text>
+                </View>
+                <Text style={getOptionTextStyle(idx)}>{opt}</Text>
+              </Pressable>
+            ))}
           </View>
 
-          {/* Feedback & Actions */}
-          {!isSubmitted ? (
+          {/* Submit / Feedback */}
+          {!submitted ? (
             <Pressable
               style={[
-                styles.submitButton,
-                { backgroundColor: selectedIdx !== null ? themeColor : "#CBD5E1" },
+                styles.submitBtn,
+                selectedIdx === null && styles.submitBtnDisabled,
               ]}
+              onPress={handleSubmit}
               disabled={selectedIdx === null}
-              onPress={handleQuizSubmit}
             >
-              <Text style={styles.submitButtonText}>Check Answer</Text>
+              <Text style={styles.submitBtnText}>Check Answer</Text>
             </Pressable>
           ) : (
-            <View style={styles.feedbackContainer}>
+            <View style={styles.feedbackArea}>
               <View
                 style={[
-                  styles.feedbackBox,
-                  { backgroundColor: isCorrect ? "#ECFDF5" : "#FEF2F2" },
+                  styles.feedbackCard,
+                  isCorrect ? styles.feedbackCorrect : styles.feedbackWrong,
                 ]}
               >
+                <Text style={styles.feedbackIcon}>{isCorrect ? "🎉" : "💡"}</Text>
                 <Text
                   style={[
                     styles.feedbackText,
-                    { color: isCorrect ? "#059669" : "#DC2626" },
+                    isCorrect ? styles.feedbackTextCorrect : styles.feedbackTextWrong,
                   ]}
                 >
                   {isCorrect
-                    ? "🎉 Correct! You've mastered this concept!"
-                    : "❌ Oops! That's incorrect. Try reviewing the lesson details above."}
+                    ? "Correct! You've got this concept down."
+                    : "Not quite — review the explanation above and try again!"}
                 </Text>
               </View>
 
               <Pressable
-                style={[styles.nextButton, { backgroundColor: themeColor }]}
+                style={({ pressed }) => [
+                  styles.continueBtn,
+                  pressed && { opacity: 0.85 },
+                ]}
                 onPress={() => router.back()}
               >
-                <Text style={styles.nextButtonText}>Continue Roadmap</Text>
+                <Text style={styles.continueBtnText}>Continue Roadmap</Text>
+                <Text style={styles.continueBtnArrow}>→</Text>
               </Pressable>
             </View>
           )}
@@ -177,220 +194,267 @@ export default function LessonScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#F8FAFC",
+    backgroundColor: Colors.background,
   },
-  headerBar: {
+  scroll: {
+    padding: Spacing.xl,
+    paddingBottom: Spacing.hero,
+  },
+
+  // Empty state
+  emptyState: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: Spacing.md,
+  },
+  emptyEmoji: { fontSize: 48 },
+  emptyTitle: {
+    fontSize: FontSize.title3,
+    fontWeight: FontWeight.bold,
+    color: Colors.textMuted,
+  },
+  emptyBtn: {
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.lg,
+    backgroundColor: Colors.primary,
+    borderRadius: Radius.md,
+  },
+  emptyBtnText: {
+    color: Colors.textInverse,
+    fontWeight: FontWeight.semiBold,
+  },
+
+  // Concept
+  conceptCard: {
+    backgroundColor: Colors.surface,
+    borderRadius: Radius.xl,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    padding: Spacing.xl,
+    marginBottom: Spacing.xl,
+    ...Elevation.sm,
+  },
+  conceptLabel: {
+    ...LabelChip,
+    color: Colors.primaryLight,
+    marginBottom: Spacing.sm,
+  },
+  conceptTitle: {
+    fontSize: FontSize.title2,
+    fontWeight: FontWeight.black,
+    color: Colors.textPrimary,
+    marginBottom: Spacing.md,
+    lineHeight: 30,
+  },
+  conceptBody: {
+    fontSize: FontSize.body,
+    color: Colors.textSecondary,
+    lineHeight: 25,
+  },
+
+  // Code
+  codeSection: {
+    marginBottom: Spacing.xl,
+    borderRadius: Radius.xl,
+    overflow: "hidden",
+    ...Elevation.sm,
+  },
+  codeHeader: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingVertical: 15,
-    backgroundColor: "white",
-    borderBottomWidth: 1,
-    borderColor: "#E2E8F0",
+    backgroundColor: "#011F1A",
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.md,
+    gap: Spacing.xs,
   },
-  backButton: {
-    paddingVertical: 5,
-    paddingHorizontal: 10,
+  codeDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: "#EF4444",
   },
-  backText: {
-    fontSize: 16,
-    fontWeight: "700",
-  },
-  headerTitle: {
-    fontSize: 16,
-    fontWeight: "800",
-    color: "#0F172A",
-    flex: 1,
-    textAlign: "center",
-  },
-  scrollContainer: {
-    padding: 20,
-    paddingBottom: 40,
-  },
-  errorContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-  },
-  errorText: {
-    fontSize: 18,
-    color: "#64748B",
-    marginBottom: 20,
-  },
-  explanationCard: {
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 20,
-    borderWidth: 1,
-    borderColor: "#E2E8F0",
-    shadowColor: "#0F172A",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.04,
-    shadowRadius: 3,
-    elevation: 2,
-    marginBottom: 20,
-  },
-  sectionLabel: {
-    fontSize: 11,
-    fontWeight: "800",
-    color: "#64748B",
-    letterSpacing: 1,
-    marginBottom: 5,
-  },
-  lessonTitle: {
-    fontSize: 22,
-    fontWeight: "800",
-    color: "#0F172A",
-    marginBottom: 12,
-  },
-  explanationText: {
-    fontSize: 15,
-    color: "#334155",
-    lineHeight: 24,
-  },
-  codeContainer: {
-    marginBottom: 20,
-  },
-  codeLabel: {
-    fontSize: 11,
-    fontWeight: "800",
-    color: "#64748B",
-    letterSpacing: 1,
-    marginBottom: 8,
-    paddingLeft: 4,
+  codeHeaderLabel: {
+    fontSize: FontSize.caption,
+    fontWeight: FontWeight.semiBold,
+    color: "rgba(255,255,255,0.4)",
+    marginLeft: Spacing.sm,
+    letterSpacing: 0.5,
   },
   codeBlock: {
-    backgroundColor: "#0F172A",
-    borderRadius: 16,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: "#1E293B",
+    backgroundColor: Colors.primaryDark,
+    padding: Spacing.xl,
   },
   codeText: {
     fontFamily: "monospace",
-    color: "#38BDF8",
     fontSize: 14,
-    lineHeight: 20,
+    color: Colors.butter,
+    lineHeight: 22,
   },
-  quizCard: {
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 20,
+
+  // Quiz
+  quizSection: {
+    backgroundColor: Colors.surface,
+    borderRadius: Radius.xl,
     borderWidth: 1,
-    borderColor: "#E2E8F0",
-    shadowColor: "#0F172A",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 3,
-    marginBottom: 20,
+    borderColor: Colors.border,
+    padding: Spacing.xl,
+    ...Elevation.sm,
   },
-  quizHeaderLabel: {
-    fontSize: 11,
-    fontWeight: "800",
-    color: "#64748B",
-    letterSpacing: 1,
-    marginBottom: 8,
+  quizLabel: {
+    ...LabelChip,
+    color: Colors.primaryLight,
+    marginBottom: Spacing.sm,
   },
   quizQuestion: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: "#0F172A",
-    lineHeight: 22,
-    marginBottom: 15,
+    fontSize: FontSize.title3,
+    fontWeight: FontWeight.bold,
+    color: Colors.textPrimary,
+    lineHeight: 26,
+    marginBottom: Spacing.xl,
   },
-  optionsContainer: {
-    marginBottom: 20,
+  options: {
+    gap: Spacing.sm,
+    marginBottom: Spacing.xl,
   },
-  optionButton: {
-    backgroundColor: "white",
-    borderRadius: 12,
-    padding: 15,
+  option: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: Colors.surface,
+    borderRadius: Radius.md,
     borderWidth: 1.5,
-    borderColor: "#E2E8F0",
-    marginBottom: 10,
+    borderColor: Colors.border,
+    padding: Spacing.md,
+    gap: Spacing.md,
+  },
+  optionSelected: {
+    borderColor: Colors.primary,
+    backgroundColor: Colors.primaryAlpha08,
+  },
+  optionCorrect: {
+    borderColor: Colors.success,
+    backgroundColor: Colors.successBg,
+  },
+  optionWrong: {
+    borderColor: Colors.error,
+    backgroundColor: Colors.errorBg,
+  },
+  optionDisabled: {
+    opacity: 0.45,
+  },
+  optionLetter: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: Colors.surfaceSecondary,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  optionLetterCorrect: {
+    backgroundColor: Colors.success,
+  },
+  optionLetterWrong: {
+    backgroundColor: Colors.error,
+  },
+  optionLetterText: {
+    fontSize: FontSize.bodySmall,
+    fontWeight: FontWeight.bold,
+    color: Colors.textSecondary,
+  },
+  optionLetterTextCorrect: {
+    color: Colors.textInverse,
   },
   optionText: {
-    fontSize: 15,
-    color: "#475569",
-    fontWeight: "600",
+    fontSize: FontSize.body,
+    fontWeight: FontWeight.medium,
+    color: Colors.textSecondary,
+    flex: 1,
   },
-  selectedOption: {
-    backgroundColor: "white",
+  optionTextSelected: {
+    color: Colors.primary,
+    fontWeight: FontWeight.semiBold,
   },
-  selectedOptionText: {
-    fontWeight: "700",
+  optionTextCorrect: {
+    color: Colors.successText,
+    fontWeight: FontWeight.semiBold,
   },
-  correctOption: {
-    backgroundColor: "#ECFDF5",
-    borderColor: "#10B981",
+  optionTextWrong: {
+    color: Colors.errorText,
+    fontWeight: FontWeight.semiBold,
   },
-  correctOptionText: {
-    color: "#065F46",
-    fontWeight: "700",
+  optionTextDisabled: {
+    color: Colors.textMuted,
   },
-  incorrectOption: {
-    backgroundColor: "#FEF2F2",
-    borderColor: "#EF4444",
-  },
-  incorrectOptionText: {
-    color: "#991B1B",
-    fontWeight: "700",
-  },
-  disabledOption: {
-    backgroundColor: "#F8FAFC",
-    borderColor: "#E2E8F0",
-  },
-  disabledOptionText: {
-    color: "#94A3B8",
-  },
-  submitButton: {
-    paddingVertical: 15,
-    borderRadius: 12,
+
+  // Submit button
+  submitBtn: {
+    backgroundColor: Colors.primary,
+    borderRadius: Radius.md,
+    paddingVertical: Spacing.md,
     alignItems: "center",
-    justifyContent: "center",
   },
-  submitButtonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "700",
+  submitBtnDisabled: {
+    backgroundColor: Colors.border,
   },
-  feedbackContainer: {
-    marginTop: 5,
+  submitBtnText: {
+    fontSize: FontSize.body,
+    fontWeight: FontWeight.bold,
+    color: Colors.textInverse,
   },
-  feedbackBox: {
-    borderRadius: 12,
-    padding: 15,
-    marginBottom: 15,
+
+  // Feedback
+  feedbackArea: {
+    gap: Spacing.md,
+  },
+  feedbackCard: {
+    borderRadius: Radius.md,
+    padding: Spacing.lg,
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: Spacing.md,
+  },
+  feedbackCorrect: {
+    backgroundColor: Colors.successBg,
+    borderWidth: 1,
+    borderColor: Colors.success + "50",
+  },
+  feedbackWrong: {
+    backgroundColor: Colors.errorBg,
+    borderWidth: 1,
+    borderColor: Colors.error + "40",
+  },
+  feedbackIcon: {
+    fontSize: 22,
   },
   feedbackText: {
-    fontSize: 14,
-    fontWeight: "600",
-    lineHeight: 20,
+    flex: 1,
+    fontSize: FontSize.body,
+    fontWeight: FontWeight.medium,
+    lineHeight: 22,
   },
-  nextButton: {
-    paddingVertical: 15,
-    borderRadius: 12,
+  feedbackTextCorrect: {
+    color: Colors.successText,
+  },
+  feedbackTextWrong: {
+    color: Colors.errorText,
+  },
+  continueBtn: {
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: Colors.primary,
+    borderRadius: Radius.md,
+    paddingVertical: Spacing.md,
+    gap: Spacing.sm,
   },
-  nextButtonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "700",
+  continueBtnText: {
+    fontSize: FontSize.body,
+    fontWeight: FontWeight.bold,
+    color: Colors.textInverse,
   },
-  button: {
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 15,
-    fontWeight: "700",
+  continueBtnArrow: {
+    fontSize: FontSize.body,
+    color: Colors.butter,
+    fontWeight: FontWeight.bold,
   },
 });

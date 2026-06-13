@@ -8,30 +8,37 @@ import {
 } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { careerPaths } from "../../data";
+import AppHeader from "../../components/AppHeader";
+import {
+  Colors,
+  FontSize,
+  FontWeight,
+  Spacing,
+  Radius,
+  Elevation,
+  LabelChip,
+} from "../../constants/theme";
 
 export default function ProjectScreen() {
-  const params = useLocalSearchParams();
-  const projectId = params.id as string;
-  const topicId = params.topicId as string;
-  const pathId = (params.path as string) || "backend";
+  const {
+    id: projectId,
+    topicId,
+    path: pathId = "backend",
+  } = useLocalSearchParams<{ id: string; topicId: string; path: string }>();
 
-  // Retrieve project details
-  const pathData = careerPaths[pathId] || careerPaths.backend;
+  const pathData = careerPaths[pathId] ?? careerPaths.backend;
   const topicData = pathData.roadmap.find((t) => t.id === topicId);
   const projectData = topicData?.projects?.find((p) => p.id === projectId);
-
-  // Path specific theme color
-  let themeColor = "#2563EB"; // Backend default
-  if (pathId === "web") themeColor = "#0EA5E9";
-  if (pathId === "mobile") themeColor = "#8B5CF6";
 
   if (!projectData) {
     return (
       <SafeAreaView style={styles.safeArea}>
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>Project guide not found.</Text>
-          <Pressable style={[styles.button, { backgroundColor: themeColor }]} onPress={() => router.back()}>
-            <Text style={styles.buttonText}>Go Back</Text>
+        <AppHeader title="Project" />
+        <View style={styles.emptyState}>
+          <Text style={styles.emptyEmoji}>🔍</Text>
+          <Text style={styles.emptyTitle}>Project not found</Text>
+          <Pressable style={styles.emptyBtn} onPress={() => router.back()}>
+            <Text style={styles.emptyBtnText}>← Go Back</Text>
           </Pressable>
         </View>
       </SafeAreaView>
@@ -40,60 +47,75 @@ export default function ProjectScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      {/* Header */}
-      <View style={styles.headerBar}>
-        <Pressable style={styles.backButton} onPress={() => router.back()}>
-          <Text style={[styles.backText, { color: themeColor }]}>← Back</Text>
-        </Pressable>
-        <Text style={styles.headerTitle} numberOfLines={1}>
-          Project: {projectData.title}
-        </Text>
-        <View style={{ width: 60 }} />
-      </View>
+      <AppHeader title={projectData.title} />
 
-      <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
-        {/* Intro */}
-        <View style={styles.introCard}>
-          <Text style={styles.sectionLabel}>MINI PROJECT GUIDE</Text>
-          <Text style={styles.projectTitle}>{projectData.title}</Text>
-          <Text style={styles.projectDescription}>{projectData.description}</Text>
+      <ScrollView
+        contentContainerStyle={styles.scroll}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* ── Hero card ─────────────────────────────── */}
+        <View style={styles.heroCard}>
+          <View style={styles.heroTop}>
+            <View style={styles.heroIconBox}>
+              <Text style={styles.heroIcon}>🛠️</Text>
+            </View>
+            <View style={styles.heroBadge}>
+              <Text style={styles.heroBadgeText}>Practice Project</Text>
+            </View>
+          </View>
+          <Text style={styles.heroTitle}>{projectData.title}</Text>
+          <Text style={styles.heroDesc}>{projectData.description}</Text>
         </View>
 
-        {/* Requirements */}
+        {/* ── Requirements ──────────────────────────── */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>📋 Requirements</Text>
+          <Text style={styles.sectionLabel}>REQUIREMENTS</Text>
+          <Text style={styles.sectionTitle}>What to build</Text>
           <View style={styles.card}>
-            {projectData.requirements.map((req, idx) => (
-              <View key={idx} style={styles.bulletRow}>
-                <Text style={[styles.bulletDot, { color: themeColor }]}>•</Text>
-                <Text style={styles.bulletText}>{req}</Text>
+            {projectData.requirements.map((req, i) => (
+              <View key={i} style={styles.reqRow}>
+                <View style={styles.reqBullet}>
+                  <Text style={styles.reqBulletText}>{i + 1}</Text>
+                </View>
+                <Text style={styles.reqText}>{req}</Text>
               </View>
             ))}
           </View>
         </View>
 
-        {/* Folder Structure */}
+        {/* ── Folder Structure ──────────────────────── */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>📂 Recommended Folder Structure</Text>
-          <View style={styles.folderBlock}>
-            <Text style={styles.folderText}>{projectData.folderStructure}</Text>
+          <Text style={styles.sectionLabel}>FOLDER STRUCTURE</Text>
+          <Text style={styles.sectionTitle}>Project layout</Text>
+          <View style={styles.folderSection}>
+            <View style={styles.folderHeader}>
+              <View style={styles.codeDot} />
+              <View style={[styles.codeDot, { backgroundColor: "#F7D774" }]} />
+              <View style={[styles.codeDot, { backgroundColor: "#10B981" }]} />
+              <Text style={styles.folderHeaderLabel}>Terminal</Text>
+            </View>
+            <View style={styles.folderBody}>
+              <Text style={styles.folderText}>{projectData.folderStructure}</Text>
+            </View>
           </View>
         </View>
 
-        {/* Guide */}
+        {/* ── Guide ─────────────────────────────────── */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>💡 Implementation Guide</Text>
+          <Text style={styles.sectionLabel}>IMPLEMENTATION GUIDE</Text>
+          <Text style={styles.sectionTitle}>Step-by-step approach</Text>
           <View style={styles.card}>
             <Text style={styles.guideText}>{projectData.guide}</Text>
           </View>
         </View>
 
-        {/* Complete Project Button */}
+        {/* ── CTA ──────────────────────────────────────*/}
         <Pressable
-          style={[styles.completeButton, { backgroundColor: themeColor }]}
+          style={({ pressed }) => [styles.ctaBtn, pressed && { opacity: 0.85 }]}
           onPress={() => router.back()}
         >
-          <Text style={styles.completeButtonText}>Complete Project</Text>
+          <Text style={styles.ctaBtnText}>Mark Complete</Text>
+          <Text style={styles.ctaBtnArrow}>✓</Text>
         </Pressable>
       </ScrollView>
     </SafeAreaView>
@@ -103,160 +125,206 @@ export default function ProjectScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#F8FAFC",
+    backgroundColor: Colors.background,
   },
-  headerBar: {
-    flexDirection: "row",
+  scroll: {
+    padding: Spacing.xl,
+    paddingBottom: Spacing.hero,
+  },
+
+  // Empty state
+  emptyState: {
+    flex: 1,
     alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingVertical: 15,
-    backgroundColor: "white",
-    borderBottomWidth: 1,
-    borderColor: "#E2E8F0",
-  },
-  backButton: {
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-  },
-  backText: {
-    fontSize: 16,
-    fontWeight: "700",
-  },
-  headerTitle: {
-    fontSize: 16,
-    fontWeight: "800",
-    color: "#0F172A",
-    flex: 1,
-    textAlign: "center",
-  },
-  scrollContainer: {
-    padding: 20,
-    paddingBottom: 40,
-  },
-  errorContainer: {
-    flex: 1,
     justifyContent: "center",
+    gap: Spacing.md,
+  },
+  emptyEmoji: { fontSize: 48 },
+  emptyTitle: {
+    fontSize: FontSize.title3,
+    fontWeight: FontWeight.bold,
+    color: Colors.textMuted,
+  },
+  emptyBtn: {
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.lg,
+    backgroundColor: Colors.primary,
+    borderRadius: Radius.md,
+  },
+  emptyBtnText: {
+    color: Colors.textInverse,
+    fontWeight: FontWeight.semiBold,
+  },
+
+  // Hero
+  heroCard: {
+    backgroundColor: Colors.primary,
+    borderRadius: Radius.xl,
+    padding: Spacing.xl,
+    marginBottom: Spacing.xl,
+    ...Elevation.md,
+  },
+  heroTop: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
-    padding: 20,
+    marginBottom: Spacing.md,
   },
-  errorText: {
-    fontSize: 18,
-    color: "#64748B",
-    marginBottom: 20,
+  heroIconBox: {
+    width: 48,
+    height: 48,
+    borderRadius: Radius.md,
+    backgroundColor: Colors.butter,
+    alignItems: "center",
+    justifyContent: "center",
   },
-  introCard: {
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 20,
+  heroIcon: {
+    fontSize: 24,
+  },
+  heroBadge: {
+    backgroundColor: "rgba(255,255,255,0.15)",
+    borderRadius: Radius.pill,
+    paddingVertical: 4,
+    paddingHorizontal: Spacing.md,
     borderWidth: 1,
-    borderColor: "#E2E8F0",
-    shadowColor: "#0F172A",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.04,
-    shadowRadius: 3,
-    elevation: 2,
-    marginBottom: 20,
+    borderColor: "rgba(255,255,255,0.20)",
   },
-  sectionLabel: {
-    fontSize: 11,
-    fontWeight: "800",
-    color: "#64748B",
-    letterSpacing: 1,
-    marginBottom: 5,
+  heroBadgeText: {
+    fontSize: FontSize.caption,
+    fontWeight: FontWeight.bold,
+    color: Colors.butter,
   },
-  projectTitle: {
-    fontSize: 22,
-    fontWeight: "800",
-    color: "#0F172A",
-    marginBottom: 10,
+  heroTitle: {
+    fontSize: FontSize.title1,
+    fontWeight: FontWeight.black,
+    color: Colors.textInverse,
+    marginBottom: Spacing.sm,
   },
-  projectDescription: {
-    fontSize: 15,
-    color: "#475569",
+  heroDesc: {
+    fontSize: FontSize.body,
+    color: "rgba(255,255,255,0.70)",
     lineHeight: 22,
   },
+
+  // Section
   section: {
-    marginBottom: 20,
+    marginBottom: Spacing.xl,
+  },
+  sectionLabel: {
+    ...LabelChip,
+    color: Colors.textMuted,
+    marginBottom: Spacing.xs,
   },
   sectionTitle: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: "#1E293B",
-    marginBottom: 10,
+    fontSize: FontSize.title3,
+    fontWeight: FontWeight.bold,
+    color: Colors.textPrimary,
+    marginBottom: Spacing.md,
   },
+
+  // Generic card
   card: {
-    backgroundColor: "white",
-    borderRadius: 16,
-    padding: 16,
+    backgroundColor: Colors.surface,
+    borderRadius: Radius.lg,
     borderWidth: 1,
-    borderColor: "#E2E8F0",
-    shadowColor: "#0F172A",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.03,
-    shadowRadius: 2,
-    elevation: 1,
+    borderColor: Colors.border,
+    padding: Spacing.lg,
+    ...Elevation.sm,
   },
-  bulletRow: {
+
+  // Requirements
+  reqRow: {
     flexDirection: "row",
-    marginBottom: 10,
+    alignItems: "flex-start",
+    marginBottom: Spacing.md,
+    gap: Spacing.md,
   },
-  bulletDot: {
-    fontSize: 18,
-    marginRight: 10,
-    lineHeight: 18,
+  reqBullet: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: Colors.primary,
+    alignItems: "center",
+    justifyContent: "center",
+    flexShrink: 0,
+    marginTop: 1,
   },
-  bulletText: {
-    fontSize: 14,
-    color: "#334155",
+  reqBulletText: {
+    fontSize: FontSize.caption,
+    fontWeight: FontWeight.bold,
+    color: Colors.textInverse,
+  },
+  reqText: {
     flex: 1,
-    lineHeight: 20,
+    fontSize: FontSize.body,
+    color: Colors.textSecondary,
+    lineHeight: 22,
   },
-  folderBlock: {
-    backgroundColor: "#0F172A",
-    borderRadius: 16,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: "#1E293B",
+
+  // Folder structure
+  folderSection: {
+    borderRadius: Radius.lg,
+    overflow: "hidden",
+    ...Elevation.sm,
+  },
+  folderHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#011F1A",
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.md,
+    gap: Spacing.xs,
+  },
+  codeDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: "#EF4444",
+  },
+  folderHeaderLabel: {
+    fontSize: FontSize.caption,
+    fontWeight: FontWeight.semiBold,
+    color: "rgba(255,255,255,0.4)",
+    marginLeft: Spacing.sm,
+    letterSpacing: 0.5,
+  },
+  folderBody: {
+    backgroundColor: Colors.primaryDark,
+    padding: Spacing.xl,
   },
   folderText: {
     fontFamily: "monospace",
-    color: "#E2E8F0",
     fontSize: 14,
-    lineHeight: 20,
-  },
-  guideText: {
-    fontSize: 14,
-    color: "#475569",
+    color: "#A3D9A5",
     lineHeight: 22,
   },
-  completeButton: {
-    paddingVertical: 15,
-    borderRadius: 12,
+
+  // Guide
+  guideText: {
+    fontSize: FontSize.body,
+    color: Colors.textSecondary,
+    lineHeight: 24,
+  },
+
+  // CTA
+  ctaBtn: {
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 15,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 2,
+    backgroundColor: Colors.primary,
+    borderRadius: Radius.lg,
+    paddingVertical: Spacing.lg,
+    gap: Spacing.sm,
+    ...Elevation.md,
   },
-  completeButtonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "700",
+  ctaBtnText: {
+    fontSize: FontSize.body,
+    fontWeight: FontWeight.bold,
+    color: Colors.textInverse,
   },
-  button: {
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 15,
-    fontWeight: "700",
+  ctaBtnArrow: {
+    fontSize: FontSize.body,
+    fontWeight: FontWeight.bold,
+    color: Colors.butter,
   },
 });

@@ -4,90 +4,97 @@ import {
   StyleSheet,
   ScrollView,
   SafeAreaView,
-  Pressable,
 } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { careerPaths } from "../data";
 import RoadmapItem from "../components/RoadmapItem";
 import ProgressBar from "../components/ProgressBar";
+import AppHeader from "../components/AppHeader";
+import {
+  Colors,
+  FontSize,
+  FontWeight,
+  Spacing,
+  Radius,
+  Elevation,
+  LabelChip,
+} from "../constants/theme";
 
 export default function RoadmapScreen() {
-  const params = useLocalSearchParams();
-  const pathId = (params.path as string) || "backend";
-  
-  // Retrieve target path data, fallback to backend if invalid
-  const data = careerPaths[pathId] || careerPaths.backend;
+  const { path: pathId = "backend" } = useLocalSearchParams<{ path: string }>();
+  const data = careerPaths[pathId] ?? careerPaths.backend;
 
-  // Determine path specific theme color
-  let themeColor = "#2563EB"; // Backend default
-  if (pathId === "web") themeColor = "#0EA5E9";
-  if (pathId === "mobile") themeColor = "#8B5CF6";
+  // Static mock: 1 topic completed (Phase 4 will wire AsyncStorage)
+  const completedCount = 1;
+  const totalCount = data.roadmap.length;
+  const progressPercent = Math.round((completedCount / totalCount) * 100);
 
-  // Mock progress state (will be connected to AsyncStorage in Phase 4)
-  const mockCompletedCount = 1; 
-  const totalTopicsCount = data.roadmap.length;
-  const progressPercent = Math.round((mockCompletedCount / totalTopicsCount) * 100);
-
-  const handleItemPress = (itemId: string) => {
-    router.push({
-      pathname: `/roadmap/${itemId}`,
-      params: { path: pathId }
-    });
-  };
+  function getState(index: number): "completed" | "active" | "locked" {
+    if (index < completedCount) return "completed";
+    if (index === completedCount) return "active";
+    return "locked";
+  }
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      {/* Header Bar */}
-      <View style={styles.headerBar}>
-        <Pressable style={styles.backButton} onPress={() => router.back()}>
-          <Text style={[styles.backText, { color: themeColor }]}>← Back</Text>
-        </Pressable>
-        <Text style={styles.headerTitle}>{data.title} Roadmap</Text>
-        <View style={{ width: 60 }} /> {/* balance back button */}
-      </View>
+      <AppHeader title={`${data.title} Roadmap`} />
 
-      <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
-        {/* Progress Card */}
+      <ScrollView
+        contentContainerStyle={styles.scroll}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* ── Progress card ────────────────────────── */}
         <View style={styles.progressCard}>
-          <Text style={styles.progressTitle}>Your Roadmap Progress</Text>
-          <View style={styles.progressRow}>
-            <Text style={styles.progressRatio}>
-              {mockCompletedCount} of {totalTopicsCount} topics completed
-            </Text>
-            <Text style={[styles.progressPercent, { color: themeColor }]}>
-              {progressPercent}%
-            </Text>
+          {/* Path label */}
+          <View style={styles.pathLabelRow}>
+            <Text style={styles.pathEmoji}>{data.emoji}</Text>
+            <Text style={styles.pathLabel}>{data.title}</Text>
           </View>
-          <ProgressBar progress={progressPercent} color={themeColor} />
+
+          <View style={styles.progressMetaRow}>
+            <View>
+              <Text style={styles.progressHeading}>Your Progress</Text>
+              <Text style={styles.progressSub}>
+                {completedCount} of {totalCount} topics completed
+              </Text>
+            </View>
+            <View style={styles.progressPctBadge}>
+              <Text style={styles.progressPctText}>{progressPercent}%</Text>
+            </View>
+          </View>
+
+          <ProgressBar progress={progressPercent} height={10} color={Colors.primary} />
+
+          {/* Timeline */}
+          <View style={styles.timelineRow}>
+            <Text style={styles.timelineText}>⏱ {data.learningTimeline}</Text>
+          </View>
         </View>
 
-        <Text style={styles.roadmapHeading}>Roadmap Timeline</Text>
+        {/* ── Section heading ──────────────────────── */}
+        <View style={styles.headingRow}>
+          <Text style={styles.headingLabel}>ROADMAP</Text>
+          <Text style={styles.headingTitle}>Your Learning Path</Text>
+        </View>
 
-        {/* Timeline Items */}
-        <View style={styles.timelineContainer}>
-          {data.roadmap.map((item, index) => {
-            // Simple mock logic:
-            // First item is completed (index === 0)
-            // Second item is active (index === 1)
-            // Other items are locked (index > 1)
-            const isCompleted = index < mockCompletedCount;
-            const isActive = index === mockCompletedCount;
-            const isLast = index === data.roadmap.length - 1;
-
-            return (
-              <RoadmapItem
-                key={item.id}
-                number={index + 1}
-                title={item.title}
-                description={item.description}
-                isCompleted={isCompleted}
-                isActive={isActive}
-                isLast={isLast}
-                themeColor={themeColor}
-                onPress={() => handleItemPress(item.id)}
-              />
-            );
-          })}
+        {/* ── Timeline items ───────────────────────── */}
+        <View style={styles.timeline}>
+          {data.roadmap.map((item, index) => (
+            <RoadmapItem
+              key={item.id}
+              number={index + 1}
+              title={item.title}
+              description={item.description}
+              state={getState(index)}
+              isLast={index === data.roadmap.length - 1}
+              onPress={() =>
+                router.push({
+                  pathname: "/roadmap/[id]",
+                  params: { id: item.id, path: pathId },
+                })
+              }
+            />
+          ))}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -97,76 +104,93 @@ export default function RoadmapScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#F8FAFC",
+    backgroundColor: Colors.background,
   },
-  headerBar: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingVertical: 15,
-    backgroundColor: "white",
-    borderBottomWidth: 1,
-    borderColor: "#E2E8F0",
+  scroll: {
+    padding: Spacing.xl,
+    paddingBottom: Spacing.hero,
   },
-  backButton: {
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-  },
-  backText: {
-    fontSize: 16,
-    fontWeight: "700",
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: "800",
-    color: "#0F172A",
-  },
-  scrollContainer: {
-    padding: 20,
-    paddingBottom: 40,
-  },
+
+  // Progress card
   progressCard: {
-    backgroundColor: "white",
-    borderRadius: 16,
-    padding: 18,
+    backgroundColor: Colors.surface,
+    borderRadius: Radius.xl,
     borderWidth: 1,
-    borderColor: "#E2E8F0",
-    shadowColor: "#0F172A",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.04,
-    shadowRadius: 3,
-    elevation: 2,
-    marginBottom: 25,
+    borderColor: Colors.border,
+    padding: Spacing.xl,
+    marginBottom: Spacing.xl,
+    ...Elevation.md,
   },
-  progressTitle: {
-    fontSize: 15,
-    fontWeight: "700",
-    color: "#0F172A",
-    marginBottom: 10,
+  pathLabelRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.sm,
+    marginBottom: Spacing.lg,
   },
-  progressRow: {
+  pathEmoji: {
+    fontSize: 18,
+  },
+  pathLabel: {
+    fontSize: FontSize.bodySmall,
+    fontWeight: FontWeight.semiBold,
+    color: Colors.textSecondary,
+  },
+  progressMetaRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 8,
+    alignItems: "flex-start",
+    marginBottom: Spacing.md,
   },
-  progressRatio: {
-    fontSize: 13,
-    color: "#64748B",
-    fontWeight: "500",
+  progressHeading: {
+    fontSize: FontSize.title3,
+    fontWeight: FontWeight.bold,
+    color: Colors.textPrimary,
+    marginBottom: 2,
   },
-  progressPercent: {
-    fontSize: 16,
-    fontWeight: "800",
+  progressSub: {
+    fontSize: FontSize.bodySmall,
+    color: Colors.textMuted,
   },
-  roadmapHeading: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: "#1E293B",
-    marginBottom: 15,
+  progressPctBadge: {
+    backgroundColor: Colors.butter,
+    borderRadius: Radius.md,
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.md,
   },
-  timelineContainer: {
-    paddingLeft: 5,
+  progressPctText: {
+    fontSize: FontSize.title3,
+    fontWeight: FontWeight.black,
+    color: Colors.primary,
+  },
+  timelineRow: {
+    marginTop: Spacing.md,
+    paddingTop: Spacing.md,
+    borderTopWidth: 1,
+    borderColor: Colors.border,
+  },
+  timelineText: {
+    fontSize: FontSize.bodySmall,
+    color: Colors.textMuted,
+    fontWeight: FontWeight.medium,
+  },
+
+  // Heading
+  headingRow: {
+    marginBottom: Spacing.lg,
+  },
+  headingLabel: {
+    ...LabelChip,
+    color: Colors.textMuted,
+    marginBottom: Spacing.xs,
+  },
+  headingTitle: {
+    fontSize: FontSize.title3,
+    fontWeight: FontWeight.bold,
+    color: Colors.textPrimary,
+  },
+
+  // Timeline container
+  timeline: {
+    paddingLeft: Spacing.xs,
   },
 });

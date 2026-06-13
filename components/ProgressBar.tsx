@@ -1,44 +1,62 @@
-import { View, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
+import { Colors, Radius } from "../constants/theme";
 
 interface ProgressBarProps {
-  progress: number; // 0 to 100
+  progress: number; // 0–100
   height?: number;
   color?: string;
   backgroundColor?: string;
+  showLabel?: boolean;
 }
 
 export default function ProgressBar({
   progress,
-  height = 10,
-  color = "#2563EB",
-  backgroundColor = "#E2E8F0",
+  height = 8,
+  color = Colors.primary,
+  backgroundColor = Colors.surfaceTertiary,
+  showLabel = false,
 }: ProgressBarProps) {
-  // Clamp progress between 0 and 100
-  const clampedProgress = Math.max(0, Math.min(100, progress));
+  const clamped = Math.max(0, Math.min(100, progress));
 
   return (
-    <View style={[styles.container, { height, backgroundColor }]}>
+    <View>
       <View
         style={[
-          styles.fill,
-          {
-            width: `${clampedProgress}%`,
-            backgroundColor: color,
-            height,
-          },
+          styles.track,
+          { height, backgroundColor },
         ]}
-      />
+      >
+        <View
+          style={[
+            styles.fill,
+            {
+              width: `${clamped}%`,
+              height,
+              backgroundColor: color,
+            },
+          ]}
+        />
+      </View>
+      {showLabel && (
+        <Text style={styles.label}>{clamped}% complete</Text>
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  track: {
     width: "100%",
-    borderRadius: 5,
+    borderRadius: Radius.pill,
     overflow: "hidden",
   },
   fill: {
-    borderRadius: 5,
+    borderRadius: Radius.pill,
+  },
+  label: {
+    marginTop: 5,
+    fontSize: 11,
+    color: Colors.textMuted,
+    fontWeight: "600",
   },
 });
