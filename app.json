@@ -9,7 +9,8 @@
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.sttart.app"
     },
     "android": {
       "adaptiveIcon": {
@@ -20,7 +21,7 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.valour01.devpath"
+      "package": "com.sttart.app"
     },
     "web": {
       "output": "static",

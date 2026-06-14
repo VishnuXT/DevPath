@@ -59,7 +59,7 @@ export default function PathCard({
         <Text style={styles.cta}>{ctaLabel}</Text>
       </View>
 
-      <Text style={styles.chevron}>Next</Text>
+      {/* <Text style={styles.chevron}>Next</Text> */}
     </Pressable>
   );
 }
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    fontSize: FontSize.title2,
+    fontSize: 18,
     fontWeight: FontWeight.bold,
     color: Colors.textPrimary,
     marginBottom: Spacing.xs,
