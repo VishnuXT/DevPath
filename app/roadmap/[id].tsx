@@ -76,14 +76,6 @@ export default function RoadmapItemDetailScreen() {
           <Text style={styles.quizBtnArrow}>→</Text>
         </Pressable>
 
-        <Pressable
-          style={({ pressed }) => [styles.demoQuizBtn, pressed && styles.demoQuizBtnPressed]}
-          onPress={() => router.push("/quiz")}
-        >
-          <Text style={styles.demoQuizBtnText}>Try Demo Quiz Instead</Text>
-          <Text style={styles.demoQuizBtnArrow}>→</Text>
-        </Pressable>
-
         <View style={styles.section}>
           <Text style={styles.sectionLabel}>LESSONS</Text>
           <Text style={styles.sectionTitle}>What you&apos;ll learn</Text>
@@ -327,32 +319,6 @@ const styles = StyleSheet.create({
     fontSize: FontSize.body,
     fontWeight: FontWeight.bold,
     color: Colors.textInverse,
-  },
-  demoQuizBtn: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: Spacing.sm,
-    backgroundColor: Colors.surface,
-    borderRadius: Radius.xl,
-    paddingVertical: Spacing.md,
-    paddingHorizontal: Spacing.lg,
-    marginBottom: Spacing.xl,
-    borderWidth: 1,
-    borderColor: Colors.border,
-  },
-  demoQuizBtnPressed: {
-    backgroundColor: Colors.surfaceSecondary,
-  },
-  demoQuizBtnText: {
-    fontSize: FontSize.body,
-    fontWeight: FontWeight.bold,
-    color: Colors.textPrimary,
-  },
-  demoQuizBtnArrow: {
-    fontSize: FontSize.body,
-    fontWeight: FontWeight.bold,
-    color: Colors.textMuted,
   },
   lessonsList: {
     gap: Spacing.sm,

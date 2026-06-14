@@ -67,7 +67,7 @@ export default function HomeScreen() {
         } else {
           setShowReminder(true);
         }
-      } catch (e) {
+      } catch {
         setShowIntro(true);
       }
     }
@@ -108,7 +108,7 @@ export default function HomeScreen() {
               <View style={styles.modalItem}>
                 <Text style={styles.modalItemTitle}>💻 Practice on Code</Text>
                 <Text style={styles.modalItemText}>
-                  A pen and paper won't write programs. Always use your laptop or development machine to practice hands-on while going through the lessons.
+                  A pen and paper won&apos;t write programs. Always use your laptop or development machine to practice hands-on while going through the lessons.
                 </Text>
               </View>
             </View>
@@ -120,7 +120,7 @@ export default function HomeScreen() {
               ]}
               onPress={dismissIntro}
             >
-              <Text style={styles.modalBtnText}>Got it, let's code! 🚀</Text>
+              <Text style={styles.modalBtnText}>Got it, let&apos;s code! 🚀</Text>
             </Pressable>
           </View>
         </View>
@@ -257,13 +257,6 @@ export default function HomeScreen() {
           );
         })}
 
-        {/* <Pressable
-          style={({ pressed }) => [styles.quizBtn, pressed && styles.quizBtnPressed]}
-          onPress={() => router.push("/quiz")}
-        >
-          <Text style={styles.quizBtnLabel}>Open Quiz Demo</Text>
-          <Text style={styles.quizBtnText}>Take the reusable quiz screen</Text>
-        </Pressable> */}
 
         <Pressable
           style={({ pressed }) => [styles.aboutBtn, pressed && styles.aboutBtnPressed]}
@@ -458,28 +451,6 @@ const styles = StyleSheet.create({
     fontSize: FontSize.title3,
     fontWeight: FontWeight.bold,
     color: Colors.textPrimary,
-  },
-  quizBtn: {
-    marginTop: Spacing.lg,
-    backgroundColor: Colors.primary,
-    borderRadius: Radius.xxl,
-    padding: Spacing.xl,
-    borderWidth: 1,
-    borderColor: Colors.primaryDark,
-    ...Elevation.md,
-  },
-  quizBtnPressed: {
-    backgroundColor: Colors.primaryLight,
-  },
-  quizBtnLabel: {
-    ...LabelChip,
-    color: Colors.textInverse,
-    marginBottom: Spacing.xs,
-  },
-  quizBtnText: {
-    color: Colors.textInverse,
-    fontSize: FontSize.body,
-    fontWeight: FontWeight.semiBold,
   },
   aboutBtn: {
     marginTop: Spacing.lg,

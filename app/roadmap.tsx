@@ -67,6 +67,13 @@ export default function RoadmapScreen() {
           <Text style={styles.headingTitle}>Your Learning Path</Text>
         </View>
 
+        <View style={styles.sequentialHint}>
+          <Text style={styles.sequentialHintIcon}>🔒</Text>
+          <Text style={styles.sequentialHintText}>
+            Complete topics in order to unlock the next one
+          </Text>
+        </View>
+
         <View style={styles.timeline}>
           {data.roadmap.map((item, index) => (
             <RoadmapItem
@@ -199,6 +206,27 @@ const styles = StyleSheet.create({
   },
   timeline: {
     paddingLeft: Spacing.xs,
+  },
+  sequentialHint: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.sm,
+    backgroundColor: Colors.surfaceSecondary,
+    borderRadius: Radius.lg,
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.md,
+    marginBottom: Spacing.lg,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  sequentialHintIcon: {
+    fontSize: 14,
+  },
+  sequentialHintText: {
+    flex: 1,
+    fontSize: FontSize.caption,
+    color: Colors.textMuted,
+    lineHeight: 18,
   },
   resetBtn: {
     marginTop: Spacing.xl,
