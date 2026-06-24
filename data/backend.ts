@@ -40,6 +40,12 @@ export const backendPath: CareerPath = {
             "The frontend is what people see and click. The backend is where data is saved and rules are handled.",
           codeExample: `Frontend = buttons and screens
 Backend = data and logic`,
+          commonMistakes: [
+            {
+              mistake: "Confusing user input validation location (e.g., validating passwords only on the frontend).",
+              fix: "Always double-check credentials and inputs on the backend, because frontend validation can be bypassed by advanced users."
+            }
+          ],
           quiz: {
             question: "Which part do users directly see?",
             options: ["Frontend", "Backend", "Database", "Server log"],
@@ -53,6 +59,12 @@ Backend = data and logic`,
             "A client asks for data. A server listens, responds, and sends back the result.",
           codeExample: `Client -> sends request
 Server -> sends response`,
+          commonMistakes: [
+            {
+              mistake: "Assuming the server will always stay connected and active even if the client disconnects.",
+              fix: "HTTP connections are typically short-lived: the client asks, the server replies, and the connection closes."
+            }
+          ],
           quiz: {
             question: "What does a server do?",
             options: [

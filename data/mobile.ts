@@ -41,6 +41,12 @@ export const mobilePath: CareerPath = {
           codeExample: `React Native helps you build one app for:
 - Android phones
 - iPhones`,
+          commonMistakes: [
+            {
+              mistake: "Expecting layout alignments to look identical on all mobile screens without responsive code.",
+              fix: "Use flexbox and flex-based scaling instead of hardcoded width/height values so the UI adjusts dynamically."
+            }
+          ],
           quiz: {
             question: "What is a big benefit of React Native?",
             options: [
@@ -58,6 +64,12 @@ export const mobilePath: CareerPath = {
           explanation:
             "Expo gives you helpful tools to build, run, and test React Native apps quickly.",
           codeExample: `npx expo start`,
+          commonMistakes: [
+            {
+              mistake: "Trying to write custom native Swift or Kotlin code while using the standard Expo Go client.",
+              fix: "Expo Go only supports standard JavaScript. If you need custom native libraries, you must use Expo Development Builds."
+            }
+          ],
           quiz: {
             question: "What does Expo help you do?",
             options: [

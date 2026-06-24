@@ -46,6 +46,16 @@ export const webPath: CareerPath = {
     <h1>Hello, world!</h1>
   </body>
 </html>`,
+          commonMistakes: [
+            {
+              mistake: "Mixing up file types (e.g., trying to run style.css directly in the browser).",
+              fix: "Always open the index.html file in your browser to view your project."
+            },
+            {
+              mistake: "Putting visible page elements (like h1 or p tags) inside the <head> section.",
+              fix: "Only metadata and <title> go inside <head>. All visible components must be placed inside the <body> tags."
+            }
+          ],
           quiz: {
             question: "Which language gives a page its structure?",
             options: ["HTML", "CSS", "JavaScript", "SQL"],
@@ -61,6 +71,12 @@ export const webPath: CareerPath = {
 1. Write code in index.html
 2. Save the file
 3. Refresh the browser`,
+          commonMistakes: [
+            {
+              mistake: "Refreshing the browser but not seeing updates because the editor file wasn't saved.",
+              fix: "Remember to use Ctrl+S (Cmd+S on Mac) in your editor before refreshing the browser."
+            }
+          ],
           quiz: {
             question: "What is the best tool to view your page while learning?",
             options: ["A browser", "A database", "A calculator", "A terminal only"],

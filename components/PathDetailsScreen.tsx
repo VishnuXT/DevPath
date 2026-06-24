@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   ScrollView,
   View,
@@ -8,9 +9,11 @@ import {
 } from "react-native";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Feather } from "@expo/vector-icons";
 import { CareerPath } from "../data/types";
 import ProgressBar from "./ProgressBar";
 import AppHeader from "./AppHeader";
+import RoadmapItem from "./RoadmapItem";
 import { useProgress } from "../context/ProgressContext";
 import {
   Colors,
@@ -19,6 +22,7 @@ import {
   Spacing,
   Radius,
   Elevation,
+  LabelChip,
 } from "../constants/theme";
 
 interface PathDetailsScreenProps {
@@ -34,12 +38,20 @@ export default function PathDetailsScreen({
 }: PathDetailsScreenProps) {
   const { resetPathProgress, getCompletedCount } = useProgress();
   const completedCount = getCompletedCount(pathId);
+  const [showOverview, setShowOverview] = useState(false);
+
+  function getTopicState(index: number): "completed" | "active" | "locked" {
+    if (index < completedCount) return "completed";
+    if (index === completedCount) return "active";
+    return "locked";
+  }
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <AppHeader title={data.title} />
 
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+        {/* Course Hero Banner */}
         <View style={styles.hero}>
           <View style={styles.heroIconRing}>
             <Text style={styles.heroEmoji}>{data.emoji}</Text>
@@ -52,6 +64,7 @@ export default function PathDetailsScreen({
           </View>
         </View>
 
+        {/* Stats strip */}
         <View style={styles.statsStrip}>
           <View style={styles.statItem}>
             <Text style={styles.statNumber}>{data.roadmap.length}</Text>
@@ -69,6 +82,7 @@ export default function PathDetailsScreen({
           </View>
         </View>
 
+        {/* Progress Strip */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Your Progress</Text>
@@ -80,88 +94,117 @@ export default function PathDetailsScreen({
             <ProgressBar progress={progress} color={Colors.primary} height={10} />
             <Text style={styles.progressHint}>
               {progress === 0
-                ? "You haven&apos;t started yet - let&apos;s go!"
+                ? "You haven't started yet - let's go!"
                 : `You're ${progress}% of the way there. Keep going!`}
             </Text>
           </View>
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Technologies</Text>
-          <View style={styles.techGrid}>
-            {data.technologies.map((tech, i) => (
-              <View key={i} style={styles.techChip}>
-                <Text style={styles.techEmoji}>{tech.emoji}</Text>
-                <Text style={styles.techName}>{tech.name}</Text>
-              </View>
-            ))}
-          </View>
-        </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Skills You&apos;ll Gain</Text>
-          <View style={styles.card}>
-            {data.skills.map((skill, i) => (
-              <View key={i} style={styles.skillRow}>
-                <View style={styles.skillDot} />
-                <Text style={styles.skillText}>{skill}</Text>
-              </View>
-            ))}
-          </View>
-        </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Career Roles</Text>
-          <View style={styles.rolesGrid}>
-            {data.careerOpportunities.map((role, i) => (
-              <View key={i} style={styles.rolePill}>
-                <Text style={styles.rolePillText}>{role}</Text>
-              </View>
-            ))}
-          </View>
-        </View>
-
-        <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Roadmap Preview</Text>
-          </View>
-          <View style={styles.card}>
-            {data.roadmap.map((item, i) => {
-              const isCompleted = i < completedCount;
-              const isActive = i === completedCount;
-              return (
-                <View key={item.id} style={styles.previewRow}>
-                  <View
-                    style={[
-                      styles.previewDot,
-                      isCompleted && styles.previewDotCompleted,
-                      isActive && styles.previewDotActive,
-                    ]}
-                  />
-                  <Text
-                    style={[
-                      styles.previewText,
-                      (isCompleted || isActive) && styles.previewTextActive,
-                    ]}
-                  >
-                    {i + 1}. {item.title}
-                  </Text>
-                </View>
-              );
-            })}
-          </View>
-        </View>
-
+        {/* Collapsible Overview Section */}
         <Pressable
-          style={({ pressed }) => [styles.ctaBtn, pressed && styles.ctaBtnPressed]}
-          onPress={() =>
-            router.push({ pathname: "/roadmap", params: { path: pathId } })
-          }
+          style={({ pressed }) => [
+            styles.overviewToggleBtn,
+            pressed && styles.overviewToggleBtnPressed,
+          ]}
+          onPress={() => setShowOverview(!showOverview)}
         >
-          <Text style={styles.ctaBtnText}>Open Full Roadmap</Text>
-          <Text style={styles.ctaBtnArrow}>→</Text>
+          <Text style={styles.overviewToggleText}>
+            {showOverview ? "Hide Course Details" : "Show Course Details (Skills & Technologies)"}
+          </Text>
+          <Feather
+            name={showOverview ? "chevron-up" : "chevron-down"}
+            size={16}
+            color={Colors.primary}
+          />
         </Pressable>
 
+        {showOverview && (
+          <View style={styles.expandedOverview}>
+            {/* Technologies Grid */}
+            <View style={styles.subOverviewSection}>
+              <Text style={styles.subOverviewTitle}>Technologies</Text>
+              <View style={styles.techGrid}>
+                {data.technologies.map((tech, i) => (
+                  <View key={i} style={styles.techChip}>
+                    <Text style={styles.techEmoji}>{tech.emoji}</Text>
+                    <Text style={styles.techName}>{tech.name}</Text>
+                  </View>
+                ))}
+              </View>
+            </View>
+
+            {/* Skills Gain Card */}
+            <View style={styles.subOverviewSection}>
+              <Text style={styles.subOverviewTitle}>Skills You'll Gain</Text>
+              <View style={styles.card}>
+                {data.skills.map((skill, i) => (
+                  <View key={i} style={styles.skillRow}>
+                    <View style={styles.skillDot} />
+                    <Text style={styles.skillText}>{skill}</Text>
+                  </View>
+                ))}
+              </View>
+            </View>
+
+            {/* Career Roles pills */}
+            <View style={styles.subOverviewSection}>
+              <Text style={styles.subOverviewTitle}>Career Roles</Text>
+              <View style={styles.rolesGrid}>
+                {data.careerOpportunities.map((role, i) => (
+                  <View key={i} style={styles.rolePill}>
+                    <Text style={styles.rolePillText}>{role}</Text>
+                  </View>
+                ))}
+              </View>
+            </View>
+          </View>
+        )}
+
+        {/* Interactive Subway Timeline Section */}
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <View>
+              <Text style={styles.sectionLabel}>ROADMAP</Text>
+              <Text style={styles.sectionTitle}>Your Learning Path</Text>
+            </View>
+          </View>
+
+          <View style={styles.sequentialHint}>
+            <Text style={styles.sequentialHintIcon}>🔒</Text>
+            <Text style={styles.sequentialHintText}>
+              Complete topics in order to unlock the next one
+            </Text>
+          </View>
+
+          <View style={styles.timelineContainer}>
+            {data.roadmap.map((item, index) => (
+              <RoadmapItem
+                key={item.id}
+                number={index + 1}
+                title={item.title}
+                description={item.description}
+                state={getTopicState(index)}
+                isLast={index === data.roadmap.length - 1}
+                onPress={() => {
+                  const state = getTopicState(index);
+                  if (state === "locked") {
+                    Alert.alert(
+                      "Topic Locked 🔒",
+                      `Please complete the previous topics first to unlock "${item.title}".`
+                    );
+                  } else {
+                    router.push({
+                      pathname: "/roadmap/[id]",
+                      params: { id: item.id, path: pathId },
+                    });
+                  }
+                }}
+              />
+            ))}
+          </View>
+        </View>
+
+        {/* Reset Progress Button */}
         {progress > 0 && (
           <Pressable
             style={({ pressed }) => [styles.resetBtn, pressed && styles.resetBtnPressed]}
@@ -295,6 +338,11 @@ const styles = StyleSheet.create({
     fontWeight: FontWeight.bold,
     color: Colors.textPrimary,
   },
+  sectionLabel: {
+    ...LabelChip,
+    color: Colors.textMuted,
+    marginBottom: Spacing.xs,
+  },
   sectionMeta: {
     fontSize: FontSize.bodySmall,
     fontWeight: FontWeight.semiBold,
@@ -373,60 +421,75 @@ const styles = StyleSheet.create({
     fontWeight: FontWeight.semiBold,
     color: Colors.textSecondary,
   },
-  previewRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: Spacing.sm,
-  },
-  previewDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: Colors.border,
-    marginRight: Spacing.md,
-  },
-  previewDotActive: {
-    backgroundColor: Colors.primary,
-  },
-  previewDotCompleted: {
-    backgroundColor: Colors.success,
-  },
-  previewText: {
-    fontSize: FontSize.bodySmall,
-    color: Colors.textMuted,
-  },
-  previewTextActive: {
-    color: Colors.textPrimary,
-    fontWeight: FontWeight.semiBold,
-  },
-  ctaBtn: {
+  overviewToggleBtn: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.surface,
+    borderWidth: 1.5,
+    borderColor: Colors.border,
     borderRadius: Radius.lg,
-    paddingVertical: Spacing.lg,
+    paddingVertical: Spacing.md,
+    marginBottom: Spacing.lg,
     gap: Spacing.sm,
-    ...Elevation.md,
+    ...Elevation.sm,
   },
-  ctaBtnPressed: {
-    backgroundColor: Colors.primaryDark,
+  overviewToggleBtnPressed: {
+    backgroundColor: Colors.surfaceSecondary,
   },
-  ctaBtnText: {
-    fontSize: FontSize.body,
+  overviewToggleText: {
+    fontSize: FontSize.bodySmall,
     fontWeight: FontWeight.bold,
-    color: Colors.textInverse,
+    color: Colors.primary,
   },
-  ctaBtnArrow: {
-    fontSize: FontSize.body,
+  expandedOverview: {
+    backgroundColor: Colors.surfaceSecondary,
+    borderColor: Colors.border,
+    borderWidth: 1,
+    borderRadius: Radius.xl,
+    padding: Spacing.md,
+    marginBottom: Spacing.xl,
+    gap: Spacing.md,
+  },
+  subOverviewSection: {
+    gap: Spacing.xs,
+  },
+  subOverviewTitle: {
+    fontSize: FontSize.bodySmall,
     fontWeight: FontWeight.bold,
-    color: Colors.textInverse,
+    color: Colors.textSecondary,
+    marginBottom: Spacing.xs,
+  },
+  timelineContainer: {
+    marginTop: Spacing.md,
+  },
+  sequentialHint: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.sm,
+    backgroundColor: Colors.surfaceSecondary,
+    borderRadius: Radius.lg,
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.md,
+    marginBottom: Spacing.lg,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  sequentialHintIcon: {
+    fontSize: 14,
+  },
+  sequentialHintText: {
+    flex: 1,
+    fontSize: FontSize.caption,
+    color: Colors.textMuted,
+    lineHeight: 18,
   },
   resetBtn: {
     marginTop: Spacing.md,
+    marginBottom: Spacing.xl,
     borderWidth: 1.5,
     borderColor: Colors.error,
-    borderRadius: Radius.md,
+    borderRadius: Radius.xl,
     paddingVertical: Spacing.md,
     alignItems: "center",
     justifyContent: "center",

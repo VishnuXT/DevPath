@@ -56,6 +56,7 @@ export default function HomeScreen() {
   const overallProgress = getOverallProgress();
   const [showIntro, setShowIntro] = useState(false);
   const [showReminder, setShowReminder] = useState(false);
+  
   const scrollRef = useRef<ScrollView>(null);
 
   useEffect(() => {
@@ -73,6 +74,8 @@ export default function HomeScreen() {
     }
     checkIntro();
   }, []);
+
+
 
   async function dismissIntro() {
     setShowIntro(false);
@@ -169,13 +172,17 @@ export default function HomeScreen() {
               pressed && styles.discordAvatarPressed,
             ]}
             onPress={() => {
-              scrollRef.current?.scrollToEnd({ animated: true });
+              Linking.openURL("https://discord.gg/FHwREGyN").catch((err) =>
+                console.warn("Failed to open Discord link", err)
+              );
             }}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
             <Ionicons name="logo-discord" size={22} color="#FFFFFF" />
           </Pressable>
         </View>
+
+
 
         <View style={styles.heroBanner}>
           <View style={styles.heroBannerLeft}>
@@ -609,4 +616,5 @@ const styles = StyleSheet.create({
     fontWeight: FontWeight.bold,
     color: "#FFFFFF",
   },
+
 });

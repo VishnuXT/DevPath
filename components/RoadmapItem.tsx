@@ -56,11 +56,10 @@ export default function RoadmapItem({
         style={({ pressed }) => [
           styles.card,
           nodeStyle.card,
-          pressed && styles.cardPressed,
+          pressed && state !== "locked" && styles.cardPressed,
           isLast && styles.cardLast,
         ]}
         onPress={onPress}
-        disabled={state === "locked"}
       >
         <View style={[styles.chip, nodeStyle.chip]}>
           <Text style={[styles.chipText, nodeStyle.chipText]}>{statusText}</Text>

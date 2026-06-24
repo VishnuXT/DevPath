@@ -4,11 +4,17 @@ export interface Quiz {
   answerIndex: number;
 }
 
+export interface CommonMistake {
+  mistake: string;
+  fix: string;
+}
+
 export interface Lesson {
   id: string;
   title: string;
   explanation: string;
   codeExample?: string;
+  commonMistakes?: CommonMistake[];
   quiz: Quiz;
 }
 
