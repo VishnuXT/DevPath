@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -12,12 +12,13 @@ import {
 import { router, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather, Ionicons } from "@expo/vector-icons";
-import { Colors, FontSize, FontWeight, Spacing, Radius, Elevation } from "../constants/theme";
+import { Colors, FontSize, FontWeight, Spacing, Radius } from "../constants/theme";
 
 // Dynamically require WebView on native platforms to prevent build errors on web
 let WebView: any;
 if (Platform.OS !== "web") {
   try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     WebView = require("react-native-webview").WebView;
   } catch (e) {
     console.warn("WebView not available on this platform", e);
@@ -60,14 +61,50 @@ for (let i = 1; i <= 3; i++) {
 
   const [code, setCode] = useState(params.code || defaultCode);
   const [language, setLanguage] = useState(params.language || "html");
-  const [title, setTitle] = useState(params.title || "Free Sandbox");
+  const title = params.title || "Free Sandbox";
   
   const [activeTab, setActiveTab] = useState<"editor" | "output">("editor");
   const [logs, setLogs] = useState<string[]>([]);
   const [selection, setSelection] = useState({ start: 0, end: 0 });
   const [isRunning, setIsRunning] = useState(false);
+  const [runCount, setRunCount] = useState(0);
+  const [sandboxHtml, setSandboxHtml] = useState<string | null>(null);
 
   const editorRef = useRef<TextInput>(null);
+
+  const handleSandboxMessage = (type: string, args: string[]) => {
+    if (type === "completed") {
+      setIsRunning(false);
+      return;
+    }
+
+    const logLine = args.join(" ");
+    let formattedLine = logLine;
+    if (type === "warn") {
+      formattedLine = `⚠️ WARNING: ${logLine}`;
+    } else if (type === "error") {
+      formattedLine = logLine;
+    }
+
+    setLogs((prev) => [...prev, formattedLine]);
+  };
+
+  useEffect(() => {
+    if (Platform.OS === "web") {
+      const handleWebMessage = (event: MessageEvent) => {
+        try {
+          const data = JSON.parse(event.data);
+          if (data && data.source === "devroot-sandbox") {
+            handleSandboxMessage(data.type, data.args);
+          }
+        } catch {
+          // Ignore non-JSON messages
+        }
+      };
+      window.addEventListener("message", handleWebMessage);
+      return () => window.removeEventListener("message", handleWebMessage);
+    }
+  }, []);
 
   // Helper keyboard keycaps
   const helperSymbols = ["<", ">", "/", "=", "\"", "{", "}", ";", "(", ")", "[", "]", "+", "-", "*"];
@@ -87,50 +124,74 @@ for (let i = 1; i <= 3; i++) {
   const handleRun = () => {
     setIsRunning(true);
     setActiveTab("output");
+    setLogs([]);
     
     if (language === "javascript") {
-      const capturedLogs: string[] = [];
-      const customLog = (...args: any[]) => {
-        capturedLogs.push(
-          args
-            .map((arg) => {
-              if (arg === null) return "null";
-              if (arg === undefined) return "undefined";
-              if (typeof arg === "object") {
-                try {
-                  return JSON.stringify(arg, null, 2);
-                } catch {
-                  return String(arg);
-                }
-              }
-              return String(arg);
-            })
-            .join(" ")
-        );
-      };
-
-      try {
-        // Simple evaluation container
-        const sandboxEval = new Function("console", code);
-        sandboxEval({
-          log: customLog,
-          info: customLog,
-          warn: (msg: any) => customLog("⚠️ WARNING:", msg),
-          error: (msg: any) => customLog("❌ ERROR:", msg),
+      setRunCount((prev) => prev + 1);
+      
+      const html = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script>
+    (function() {
+      function sendLog(type, args) {
+        const serialized = args.map(arg => {
+          if (arg === null) return "null";
+          if (arg === undefined) return "undefined";
+          if (typeof arg === "object") {
+            try { return JSON.stringify(arg, null, 2); } catch(e) { return String(arg); }
+          }
+          return String(arg);
         });
-        
-        if (capturedLogs.length === 0) {
-          capturedLogs.push("(Code executed successfully, but printed nothing to console.)");
+        const data = { type: type, args: serialized };
+        if (window.ReactNativeWebView && window.ReactNativeWebView.postMessage) {
+          window.ReactNativeWebView.postMessage(JSON.stringify(data));
+        } else {
+          window.parent.postMessage(JSON.stringify({ source: 'devroot-sandbox', ...data }), '*');
         }
-        setLogs(capturedLogs);
-      } catch (err: any) {
-        setLogs([`❌ CRASH: ${err.message}`]);
       }
-    }
+      console.log = function(...args) { sendLog('log', args); };
+      console.info = function(...args) { sendLog('info', args); };
+      console.warn = function(...args) { sendLog('warn', args); };
+      console.error = function(...args) { sendLog('error', args); };
+      window.onerror = function(message, source, lineno, colno, error) {
+        sendLog('error', ['❌ CRASH: ' + message + ' (line ' + lineno + ')']);
+        return true;
+      };
+    })();
     
-    setTimeout(() => {
-      setIsRunning(false);
-    }, 400);
+    setTimeout(function() {
+      try {
+        ${code}
+        
+        const completeData = { type: 'completed', args: [] };
+        if (window.ReactNativeWebView && window.ReactNativeWebView.postMessage) {
+          window.ReactNativeWebView.postMessage(JSON.stringify(completeData));
+        } else {
+          window.parent.postMessage(JSON.stringify({ source: 'devroot-sandbox', ...completeData }), '*');
+        }
+      } catch(err) {
+        console.error(err.message);
+      }
+    }, 50);
+  </script>
+</head>
+<body></body>
+</html>
+`;
+      setSandboxHtml(html);
+
+      // Fallback timeout in case the execution hangs or doesn't report 'completed'
+      setTimeout(() => {
+        setIsRunning(false);
+      }, 5000);
+    } else {
+      setTimeout(() => {
+        setIsRunning(false);
+      }, 400);
+    }
   };
 
   const handleClearLogs = () => {
@@ -156,7 +217,7 @@ for (let i = 1; i <= 3; i++) {
                 </Text>
               ))
             ) : (
-              <Text style={styles.consoleMutedText}>Press "Run Code" to view logs here...</Text>
+              <Text style={styles.consoleMutedText}>Press &quot;Run Code&quot; to view logs here...</Text>
             )}
           </ScrollView>
         </View>
@@ -307,6 +368,35 @@ for (let i = 1; i <= 3; i++) {
           renderPreview()
         )}
       </View>
+
+      {language === "javascript" && sandboxHtml && (
+        Platform.OS === "web" ? (
+          <iframe
+            key={runCount}
+            srcDoc={sandboxHtml}
+            style={{ width: 0, height: 0, opacity: 0, position: "absolute" }}
+            sandbox="allow-scripts"
+          />
+        ) : (
+          WebView && (
+            <WebView
+              key={runCount}
+              originWhitelist={["*"]}
+              source={{ html: sandboxHtml }}
+              style={{ width: 0, height: 0, opacity: 0, position: "absolute" }}
+              javaScriptEnabled={true}
+              onMessage={(e: any) => {
+                try {
+                  const data = JSON.parse(e.nativeEvent.data);
+                  handleSandboxMessage(data.type, data.args);
+                } catch {
+                  // Ignore
+                }
+              }}
+            />
+          )
+        )
+      )}
     </SafeAreaView>
   );
 }

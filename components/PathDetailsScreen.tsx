@@ -135,7 +135,7 @@ export default function PathDetailsScreen({
 
             {/* Skills Gain Card */}
             <View style={styles.subOverviewSection}>
-              <Text style={styles.subOverviewTitle}>Skills You'll Gain</Text>
+              <Text style={styles.subOverviewTitle}>Skills You&apos;ll Gain</Text>
               <View style={styles.card}>
                 {data.skills.map((skill, i) => (
                   <View key={i} style={styles.skillRow}>

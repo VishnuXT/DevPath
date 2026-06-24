@@ -120,11 +120,11 @@ export default function LessonScreen() {
   }
 
   // Construct dynamic list of tabs depending on what is available in the lesson data
-  const tabs: Array<{
+  const tabs: {
     id: "concept" | "example" | "mistakes" | "quiz";
     label: string;
     icon: string;
-  }> = [
+  }[] = [
     { id: "concept", label: "Concept", icon: "book-open" },
   ];
   if (lessonData.codeExample) {
