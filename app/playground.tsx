@@ -71,6 +71,7 @@ for (let i = 1; i <= 3; i++) {
   const [sandboxHtml, setSandboxHtml] = useState<string | null>(null);
 
   const editorRef = useRef<TextInput>(null);
+  const highlighterScrollRef = useRef<ScrollView>(null);
 
   const handleSandboxMessage = (type: string, args: string[]) => {
     if (type === "completed") {
@@ -327,20 +328,37 @@ for (let i = 1; i <= 3; i++) {
       <View style={styles.contentContainer}>
         {activeTab === "editor" ? (
           <View style={styles.editorView}>
-            <TextInput
-              ref={editorRef}
-              style={styles.textEditor}
-              multiline
-              value={code}
-              onChangeText={setCode}
-              onSelectionChange={(e) => setSelection(e.nativeEvent.selection)}
-              autoCapitalize="none"
-              autoComplete="off"
-              autoCorrect={false}
-              spellCheck={false}
-              placeholder="Start coding here..."
-              placeholderTextColor="#475569"
-            />
+            <View style={{ flex: 1, position: "relative" }}>
+              <ScrollView
+                ref={highlighterScrollRef}
+                style={StyleSheet.absoluteFill}
+                contentContainerStyle={{ padding: Spacing.md }}
+                pointerEvents="none"
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
+              >
+                <HighlightCode code={code} />
+              </ScrollView>
+              <TextInput
+                ref={editorRef}
+                style={[styles.textEditor, { color: "transparent" }]}
+                multiline
+                value={code}
+                onChangeText={setCode}
+                onSelectionChange={(e) => setSelection(e.nativeEvent.selection)}
+                autoCapitalize="none"
+                autoComplete="off"
+                autoCorrect={false}
+                spellCheck={false}
+                placeholder="Start coding here..."
+                placeholderTextColor="#475569"
+                selectionColor={Colors.primary}
+                onScroll={(e) => {
+                  const y = e.nativeEvent.contentOffset.y;
+                  highlighterScrollRef.current?.scrollTo({ y, animated: false });
+                }}
+              />
+            </View>
             {/* KEYBOARD BAR HELPER */}
             <View style={styles.helperBar}>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.helperScrollContent}>
@@ -398,6 +416,44 @@ for (let i = 1; i <= 3; i++) {
         )
       )}
     </SafeAreaView>
+  );
+}
+
+function HighlightCode({ code }: { code: string }) {
+  const tokenRegex = /(<!--[\s\S]*?-->|\/\*[\s\S]*?\*\/|\/\/.*|#.*|"(?:\\.|[^\\"])*"|'(?:\\.|[^\\'])*'|`(?:\\.|[^\\`])*`|\b(?:const|let|var|function|return|import|from|def|class|if|else|await|async|for|while|try|except|in|as|is|and|or|not)\b|\b[a-zA-Z_][a-zA-Z0-9_]*\b(?=\s*\()|<\/?[a-zA-Z0-9_:-]+>?|<\/?>|\b\d+\b)/g;
+
+  const parts = code.split(tokenRegex);
+
+  return (
+    <Text style={styles.highlighterText}>
+      {parts.map((part, index) => {
+        if (!part) return null;
+
+        let color = "#ABB2BF"; // default font color (off-white)
+        let fontWeight: "400" | "bold" = "400";
+
+        if (part.startsWith("//") || part.startsWith("/*") || part.startsWith("#") || part.startsWith("<!--")) {
+          color = "#5C6370"; // comment (gray)
+        } else if (part.startsWith('"') || part.startsWith("'") || part.startsWith("`")) {
+          color = "#98C379"; // string (green)
+        } else if (part.startsWith("<") || part.endsWith(">")) {
+          color = "#E06C75"; // tag/HTML element (coral)
+        } else if (/^(?:const|let|var|function|return|import|from|def|class|if|else|await|async|for|while|try|except|in|as|is|and|or|not)$/.test(part)) {
+          color = "#C678DD"; // keyword (purple)
+          fontWeight = "bold";
+        } else if (/^\d+$/.test(part)) {
+          color = "#D19A66"; // number (orange)
+        } else if (/\b[a-zA-Z_][a-zA-Z0-9_]*\b(?=\s*\()/.test(part)) {
+          color = "#61AFEF"; // function (blue)
+        }
+
+        return (
+          <Text key={index} style={{ color, fontWeight }}>
+            {part}
+          </Text>
+        );
+      })}
+    </Text>
   );
 }
 
@@ -502,9 +558,16 @@ const styles = StyleSheet.create({
     flex: 1,
     fontFamily: Platform.OS === "ios" ? "Courier New" : "monospace",
     fontSize: 14,
-    color: "#ABB2BF", // light text
+    lineHeight: Platform.OS === "ios" ? 18 : 20,
+    color: "transparent",
     padding: Spacing.md,
     textAlignVertical: "top",
+  },
+  highlighterText: {
+    fontFamily: Platform.OS === "ios" ? "Courier New" : "monospace",
+    fontSize: 14,
+    lineHeight: Platform.OS === "ios" ? 18 : 20,
+    color: "#ABB2BF",
   },
   helperBar: {
     backgroundColor: "#090D16",
