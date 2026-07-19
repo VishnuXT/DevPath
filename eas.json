@@ -16,11 +16,6 @@
         "buildType": "apk"
       }
     },
-    "simulator": {
-      "ios": {
-        "simulator": true
-      }
-    },
     "production": {}
   },
   "submit": {

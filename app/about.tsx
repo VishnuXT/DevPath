@@ -152,7 +152,7 @@ export default function AboutScreen() {
             <Pressable
               style={({ pressed }) => [styles.discordLinkBtn, pressed && styles.discordLinkBtnPressed]}
               onPress={() => {
-                Linking.openURL("https://discord.gg/FHwREGyN").catch((err) =>
+                Linking.openURL("https://discord.gg/RHJpEkWggS").catch((err) =>
                   console.warn("Failed to open Discord link", err)
                 );
               }}
